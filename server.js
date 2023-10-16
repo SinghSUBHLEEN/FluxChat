@@ -21,7 +21,7 @@ const Chat = require("./models/chatModel");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static(__dirname + '/client/public/build'));
+app.use(express.static(__dirname + '/client/dist'));
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////* Routes */
 
@@ -31,6 +31,10 @@ const indexRouter = require('./routes/homeRoute');
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const currServer = app.listen(5000, console.log("Listening at port 5000"));
+
+app.get('*', (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+})
 
 const io = socket(currServer, {
     cors: {
