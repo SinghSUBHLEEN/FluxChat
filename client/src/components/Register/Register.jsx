@@ -40,10 +40,9 @@ function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        axios.post("/auth/register", { email, password, cpass, name, rem, img }).then(data => {
+        axios.post("/api/auth/register", { email, password, rem, cpass, name, img }).then(data => {
             console.log("posted successfully");
         }).catch(err => console.log(err));
-
     }
 
 

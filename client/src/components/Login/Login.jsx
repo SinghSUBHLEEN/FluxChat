@@ -18,6 +18,7 @@ import axios from "axios"
 
 function Login() {
 
+
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -36,7 +37,7 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post("/auth/login", { email, password, rem }).then(data => {
+        axios.post("/api/auth/login", { email, password, rem }).then(data => {
             console.log("posted successfully");
         }).catch(err => console.log(err));
     }

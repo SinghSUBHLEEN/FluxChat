@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* MongoDB Models and Connections */
 
-const connectDB = require("./models/connectDB");
+const connectDB = require("./controllers/connectDB");
 connectDB();
 const User = require("./models/userModel");
 const Message = require("./models/messageModel");
@@ -26,15 +26,21 @@ app.use(express.static(__dirname + '/client/dist'));
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////* Routes */
 
 const indexRouter = require('./routes/homeRoute');
+const authRouter = require("./routes/authRoute");
+
+app.use("/api/auth", authRouter);
+
+
 // const usersRouter = require('./routes/users');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const currServer = app.listen(5000, console.log("Listening at port 5000"));
 
-app.get('*', (req, res) => {
-    res.sendFile(__dirname + "/index.html");
+app.all('*', (req, res) => {
+    res.status(201).sendFile(__dirname + "/index.html");
 })
+
 
 const io = socket(currServer, {
     cors: {
