@@ -23,18 +23,23 @@ app.use(express.static(__dirname + '/client/dist'));
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////* Routes */
 
-const authRouter = require("./routes/authRoute");
+const authRouter = require("./routes/userRoutes");
 
-app.use("/api/auth", authRouter);
+app.use("/api/users", authRouter);
 
 
 // const usersRouter = require('./routes/users');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const currServer = app.listen(5000, console.log("Listening at port 5000"));
+const currServer = app.listen((process.env.PORT || 5000), console.log("Listening at port 5000"));
 
-app.all('*', (req, res) => {
+const corsOption = {
+    origin: "https://api.cloudinary.com",
+    optionsSuccessStatu: 204,
+}
+
+app.all('*', cors(corsOption), (req, res) => {
     res.status(201).sendFile(__dirname + "/index.html");
 })
 

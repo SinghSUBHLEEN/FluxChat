@@ -9,22 +9,30 @@ import {
     Button,
     Checkbox,
     Link,
+    Alert,
+    useToast,
+    AlertIcon,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Login.css";
 import IMAGES from "../../images/Images";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"
+import { ClipLoader } from "react-spinners";
+import cookie from "js-cookie";
+
 
 function Login() {
 
-
+    const [cook, setCook] = useState(cookie.get("token"));
+    const toast = useToast();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [show, setShow] = useState(false)
     const [rem, setRem] = useState(false);
-
+    const [load, setLoad] = useState(false);
+    const [alert, setAlert] = useState("");
 
     const handleRem = () => setRem(!rem);
     const handleClick = () => setShow(!show)
@@ -35,11 +43,34 @@ function Login() {
         navigate("/auth/register");
     }
 
+    useEffect(() => {
+        setAlert("");
+    }, [email, password, rem]);
+
+    useEffect(() => {
+        setCook(cookie.get("token"));
+        if (cook) navigate('/');
+    });
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post("/api/auth/login", { email, password, rem }).then(data => {
-            console.log("posted successfully");
-        }).catch(err => console.log(err));
+        setLoad(true);
+        setAlert("");
+        axios.post("/api/users/auth/login", { email, password, rem }).then(res => {
+            console.log("done");
+            toast({
+                title: "Logged in Successfully!",
+                status: "success",
+                duration: "4000",
+                isClosable: true,
+                position: "bottom"
+            });
+            navigate("/");
+        }).catch(err => {
+            console.log(err.response.data.error)
+            setLoad(false);
+            setAlert(err.response.data.error);
+        });
     }
 
 
@@ -96,7 +127,14 @@ function Login() {
                                 Remember me
                             </Checkbox>
                         </FormControl>
-                        <Button type="submit" colorScheme='teal' marginTop={4} borderRadius={"0.6rem"} p={4} onClick={handleSubmit}>Sign in</Button>
+                        {!load ? <Button type="submit" colorScheme='teal' marginTop={4} borderRadius={"0.6rem"} p={4} onClick={handleSubmit}>Sign in</Button> : <Button isLoading colorScheme='teal' padding={5} marginTop={4}
+                            spinner={<ClipLoader size={25} color='white' />}></Button>}
+                        {alert !== "" ? <div className="d-flex m6 p3" style={{ marginTop: "0.4rem" }}>
+                            <Alert status='error' margin={2}>
+                                <AlertIcon />
+                                {alert}
+                            </Alert>
+                        </div> : <></>}
                         <FormLabel marginTop={4}> No account ? <Link onClick={handleRegister} color='teal.500'>Create here</Link></FormLabel>
                     </form>
                 </div>
