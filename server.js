@@ -4,8 +4,6 @@ const app = express();
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const socket = require("socket.io");
-const mongoose = require("mongoose");
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* MongoDB Models and Connections */
@@ -25,7 +23,6 @@ app.use(express.static(__dirname + '/client/dist'));
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////* Routes */
 
-const indexRouter = require('./routes/homeRoute');
 const authRouter = require("./routes/authRoute");
 
 app.use("/api/auth", authRouter);
@@ -44,7 +41,7 @@ app.all('*', (req, res) => {
 
 const io = socket(currServer, {
     cors: {
-        origin: "localhost:3000",
+        origin: "localhost:5173",
         methods: ["GET", "POST", "PUT"]
     }
 });

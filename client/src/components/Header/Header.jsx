@@ -4,6 +4,7 @@ import { AiOutlineMenu } from 'react-icons/ai';
 import { Drawer, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, DrawerFooter } from "@chakra-ui/react";
 import { Navbar, Container, Form, Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
+import IMAGES from "../../images/Images";
 
 function Header() {
 
@@ -45,7 +46,13 @@ function Header() {
                                     <div onClick={onClose} style={{ fontSize: "x-large", marginTop: "0.42rem", paddingRight: "0.7rem" }} className="menuIcon">
                                         <AiOutlineMenu variant="primary" />
                                     </div>
-                                    <span className="menuIcon" style={{ fontSize: "1.5rem", marginTop: "0.07rem" }} onClick={handleBrand}>FluxChat</span>
+                                    <span className="menuIcon" style={{ fontSize: "1.5rem", marginTop: "0.07rem" }} onClick={handleBrand}><img
+                                        src={IMAGES.icon}
+                                        width="40"
+                                        height="40"
+                                        className="d-inline-block align-top"
+                                        alt="Navbar logo"
+                                    />FluxChat</span>
                                 </div>
                             </DrawerHeader>
                             <DrawerBody className="menuBody">
@@ -63,7 +70,13 @@ function Header() {
                         <div onClick={onOpen} style={{ fontSize: "x-large", marginTop: "0.42rem", paddingRight: "0.7rem" }} className="menuIcon">
                             <AiOutlineMenu variant="primary" />
                         </div>
-                        <span className="menuIcon" style={{ fontSize: "1.5rem", marginTop: "0.07rem" }} onClick={handleBrand}>FluxChat</span>
+                        <span className="menuIcon" style={{ fontSize: "1.5rem", marginTop: "0.07rem" }} onClick={handleBrand}><img
+                            src={IMAGES.icon}
+                            width="40"
+                            height="40"
+                            className="d-inline-block align-top"
+                            alt="Navbar logo"
+                        />FluxChat</span>
                     </div>
 
                     <Navbar.Collapse id="navbarScroll" />
