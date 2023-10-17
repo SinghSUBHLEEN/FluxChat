@@ -1,4 +1,4 @@
-// import { useState } from "react";
+// import { useState, useEffect } from "react";
 import "./Header.css";
 import { AiOutlineMenu } from 'react-icons/ai';
 import { Drawer, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, DrawerFooter } from "@chakra-ui/react";
@@ -6,6 +6,7 @@ import { Navbar, Container, Form, Button } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function Header() {
+
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ function Header() {
 
     return (
         <>
-            <Navbar sticky="top" expand="sm" className="color-nav" style={location.pathname === '/auth/login' || location.pathname === '/auth/register' ? option : obj}>
+            <Navbar sticky="top" expand="sm" className="color-nav" style={(location.pathname === '/auth/login' && location.pathname === '/auth/register') ? option : obj}>
                 <Container fluid className="Inner">
                     <Drawer
                         variant="secondary"
@@ -66,7 +67,7 @@ function Header() {
                     </div>
 
                     <Navbar.Collapse id="navbarScroll" />
-                    {location.pathname !== '/auth/login' || location.pathname !== '/auth/login' ? <Form className="d-flex loginButton">
+                    {(location.pathname !== '/auth/login' && location.pathname !== '/auth/register') ? <Form className="d-flex loginButton">
                         <Button variant="outline-success" style={{ padding: '0.8rem', width: "5.5rem", marginRight: "4rem", fontSize: "1.05rem" }} onClick={handleLoginClick}>Login</Button>
                     </Form> : <></>}
                 </Container>

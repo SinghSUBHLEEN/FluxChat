@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@500&display=swap');
+
+
+
+.formContainer {
+    position: relative;
+    min-height: 100vh;
+}
+
+.loginContainer {
+    width: 25rem;
+    flex: 0.45;
+}
+
+.myForm {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+
+.loginHead {
+    font-family: 'Public Sans', sans-serif;
+    font-size: xx-large;
+    color: black;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.ana {
+    text-decoration: underline;
+    font-size: 1.07rem;
+}
+
+.ana:hover {
+    cursor: pointer;
+}
+
+.star {
+    color: crimson;
+}
+
+.verticalLine {
+    border-left: solid black 2px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
