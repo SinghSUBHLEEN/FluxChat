@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     border: 0;
-    background-color: #d9e3f1;
+    background-color: #1a202c;
 }
 
 .Inner {
@@ -12,16 +12,17 @@
 .menuHeader {
     font-size: x-large;
     color: black;
+    background-color: #1a202c;
     /* border-radius: 100%; */
 }
 
 .menuFooter {
-    background-color: #d9e3f1;
+    background-color: #1a202c;
 }
 
 
 .menuBody {
-    background-color: #d9e3f1;
+    background-color: #1a202c;
 }
 
 .Navbar.Brand {
@@ -36,7 +37,6 @@
 
 .headerBrand {
     font-size: x-large;
-    color: black;
     font-weight: 600;
 }
 
@@ -49,7 +49,7 @@
 }
 
 .menuHeader {
-    background-color: #d9e3f1;
+    background-color: #1a202c;
     margin: 0;
 }
 

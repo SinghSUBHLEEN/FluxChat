@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ClipLoader } from "react-spinners";
 import cookie from "js-cookie";
+import Header from "../Header/Header";
 
 
 function Register() {
@@ -105,7 +106,7 @@ function Register() {
                 isClosable: true,
                 position: "bottom"
             });
-            navigate("/");
+            navigate("/chat");
         }).catch(err => {
             console.log(err.response.data.error)
             setLoad(false);
@@ -127,112 +128,115 @@ function Register() {
 
     useEffect(() => {
         cook = cookie.get("token");
-        if (cook) navigate('/');
+        if (cook) navigate('/chat');
     }, []);
 
 
     return (
-        <div className="formContainer">
-            <div className="myForm d-flex justify-content-center align-items-center">
-                <div style={{ display: "flex", width: "50%", backgroundColor: "white", borderRadius: "2rem" }}>
-                    <form className="rounded p-4 p-sm-7 signup-form loginContainer">
-                        <h1 className="loginHead">Sign up</h1>
-                        <FormControl isRequired>
-                            <FormLabel>Name</FormLabel>
-                            <Input type='text' value={name} onChange={handleName} placeholder='Enter name' />
-                        </FormControl>
-                        <FormControl isRequired>
-                            <FormLabel marginTop="0.7rem">Email</FormLabel>
-                            <Input type='email' value={email} onChange={handleEmail} placeholder='Enter email' />
-                            {!isError1 ? (
-                                <FormHelperText>
-                                    {"We'll never share your email"}
-                                </FormHelperText>
-                            ) : (
-                                <FormErrorMessage>Email is required.</FormErrorMessage>
-                            )}
-                        </FormControl>
-                        <FormControl isRequired >
-                            <FormLabel marginTop={"0.7rem"}>Password</FormLabel>
-                            <InputGroup size='md'>
-                                <Input
-                                    pr='4.5rem'
-                                    type={show1 ? 'text' : 'password'}
-                                    placeholder='Enter password'
-                                    value={password}
-                                    onChange={handlePassword}
-                                />
+        <>
+            <Header />
+            <div className="formContainer">
+                <div className="myForm d-flex justify-content-center align-items-center">
+                    <div style={{ display: "flex", width: "50%", backgroundColor: "white", borderRadius: "2rem" }}>
+                        <form className="rounded p-4 p-sm-7 signup-form loginContainer">
+                            <h1 className="loginHead">Sign up</h1>
+                            <FormControl isRequired>
+                                <FormLabel>Name</FormLabel>
+                                <Input type='text' value={name} onChange={handleName} placeholder='Enter name' />
+                            </FormControl>
+                            <FormControl isRequired>
+                                <FormLabel marginTop="0.7rem">Email</FormLabel>
+                                <Input type='email' value={email} onChange={handleEmail} placeholder='Enter email' />
+                                {!isError1 ? (
+                                    <FormHelperText>
+                                        {"We'll never share your email"}
+                                    </FormHelperText>
+                                ) : (
+                                    <FormErrorMessage>Email is required.</FormErrorMessage>
+                                )}
+                            </FormControl>
+                            <FormControl isRequired >
+                                <FormLabel marginTop={"0.7rem"}>Password</FormLabel>
+                                <InputGroup size='md'>
+                                    <Input
+                                        pr='4.5rem'
+                                        type={show1 ? 'text' : 'password'}
+                                        placeholder='Enter password'
+                                        value={password}
+                                        onChange={handlePassword}
+                                    />
 
-                                <InputRightElement width='4.5rem'>
-                                    <Button h='1.75rem' size='sm' onClick={handleClick1} style={{ backgroundColor: "white", boxShadow: 'none' }}>
-                                        {show1 ? 'Hide' : 'Show'}
-                                    </Button>
-                                </InputRightElement>
-                            </InputGroup>
-                            {!isError2 ? (
-                                <FormHelperText>
-                                    {"We'll never share your password"}
-                                </FormHelperText>
-                            ) : (
-                                <FormErrorMessage>Password is required.</FormErrorMessage>
-                            )}
-                        </FormControl>
-                        <FormControl isRequired >
-                            <FormLabel marginTop={"0.7rem"}>Confirm Password</FormLabel>
-                            <InputGroup size='md'>
-                                <Input
-                                    pr='4.5rem'
-                                    type={show2 ? 'text' : 'password'}
-                                    placeholder='Enter password'
-                                    value={cpass}
-                                    onChange={handleCpass}
-                                />
-                                <InputRightElement width='4.5rem'>
-                                    <Button h='1.75rem' size='sm' onClick={handleClick2} style={{ backgroundColor: "white", boxShadow: 'none' }}>
-                                        {show2 ? 'Hide' : 'Show'}
-                                    </Button>
-                                </InputRightElement>
-                            </InputGroup>
-                        </FormControl>
-                        <FormControl id="pic">
-                            <FormLabel marginTop={"0.7rem"}>Upload you picture</FormLabel>
-                            <InputGroup size='md'>
-                                <Input
-                                    pr='1.5'
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImg}
-                                    border={0}
-                                />
-                                <div>
-                                    {picLoad ? <Spinner color='red.500' size='lg'></Spinner> : <></>}
-                                </div>
+                                    <InputRightElement width='4.5rem'>
+                                        <Button h='1.75rem' size='sm' onClick={handleClick1} style={{ backgroundColor: "white", boxShadow: 'none' }}>
+                                            {show1 ? 'Hide' : 'Show'}
+                                        </Button>
+                                    </InputRightElement>
+                                </InputGroup>
+                                {!isError2 ? (
+                                    <FormHelperText>
+                                        {"We'll never share your password"}
+                                    </FormHelperText>
+                                ) : (
+                                    <FormErrorMessage>Password is required.</FormErrorMessage>
+                                )}
+                            </FormControl>
+                            <FormControl isRequired >
+                                <FormLabel marginTop={"0.7rem"}>Confirm Password</FormLabel>
+                                <InputGroup size='md'>
+                                    <Input
+                                        pr='4.5rem'
+                                        type={show2 ? 'text' : 'password'}
+                                        placeholder='Enter password'
+                                        value={cpass}
+                                        onChange={handleCpass}
+                                    />
+                                    <InputRightElement width='4.5rem'>
+                                        <Button h='1.75rem' size='sm' onClick={handleClick2} style={{ backgroundColor: "white", boxShadow: 'none' }}>
+                                            {show2 ? 'Hide' : 'Show'}
+                                        </Button>
+                                    </InputRightElement>
+                                </InputGroup>
+                            </FormControl>
+                            <FormControl id="pic">
+                                <FormLabel marginTop={"0.7rem"}>Upload you picture</FormLabel>
+                                <InputGroup size='md'>
+                                    <Input
+                                        pr='1.5'
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImg}
+                                        border={0}
+                                    />
+                                    <div>
+                                        {picLoad ? <Spinner color='red.500' size='lg'></Spinner> : <></>}
+                                    </div>
 
-                            </InputGroup>
-                        </FormControl>
-                        <FormControl>
-                            <Checkbox colorScheme='teal' value={rem} onChange={handleRem} marginTop={4}>
-                                Remember me
-                            </Checkbox>
-                        </FormControl>
-                        {!load ? <Button type="submit" colorScheme='teal' marginTop={4} borderRadius={"0.6rem"} p={4} onClick={handleSubmit}>Sign up</Button> : <Button isLoading colorScheme='teal' padding={5} marginTop={4}
-                            spinner={<ClipLoader size={25} color='white' />}></Button>}
+                                </InputGroup>
+                            </FormControl>
+                            <FormControl>
+                                <Checkbox colorScheme='red' value={rem} onChange={handleRem} marginTop={4}>
+                                    Remember me
+                                </Checkbox>
+                            </FormControl>
+                            {!load ? <Button type="submit" colorScheme='red' marginTop={4} borderRadius={"0.6rem"} p={4} onClick={handleSubmit}>Sign up</Button> : <Button isLoading colorScheme='red' padding={5} marginTop={4}
+                                spinner={<ClipLoader size={25} color='white' />}></Button>}
 
-                        {alert !== "" ? <div className="d-flex m6 p3" style={{ marginTop: "0.4rem" }}>
-                            <Alert status='error' margin={2}>
-                                <AlertIcon />
-                                {alert}
-                            </Alert>
-                        </div> : <></>}
+                            {alert !== "" ? <div className="d-flex m6 p3" style={{ marginTop: "0.4rem" }}>
+                                <Alert status='error' margin={2}>
+                                    <AlertIcon />
+                                    {alert}
+                                </Alert>
+                            </div> : <></>}
 
-                        <FormLabel marginTop={4}>Already have an account ? <Link onClick={navigateLogin} color='teal.500'>Signin here</Link></FormLabel>
-                    </form>
-                    <div className="verticalLine" />
-                    <div style={{ flex: "0.55", backgroundColor: "white", borderRadius: "2rem", display: "flex", justifyItems: "center", alignItems: "center" }}><Image src={IMAGES.image1} alt='logo image' style={{ borderRadius: "2rem" }} /></div>
+                            <FormLabel marginTop={4}>Already have an account ? <Link onClick={navigateLogin} color='red.500'>Signin here</Link></FormLabel>
+                        </form>
+                        <div className="verticalLine" />
+                        <div style={{ flex: "0.55", backgroundColor: "white", borderRadius: "2rem", display: "flex", justifyItems: "center", alignItems: "center" }}><Image src={IMAGES.image1} alt='logo image' style={{ borderRadius: "2rem" }} /></div>
+                    </div>
+
                 </div>
-
             </div>
-        </div>
+        </>
     )
 }
 

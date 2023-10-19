@@ -1,25 +1,40 @@
 // import { useState, useEffect } from "react";
 import "./Header.css";
-import { AiOutlineMenu, AiOutlineUser } from 'react-icons/ai';
 import { TbLogout2 } from "react-icons/tb";
+import { IoSearch } from "react-icons/io5";
 import { FaUserLarge } from "react-icons/fa6";
-import { Drawer, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, useToast, DrawerFooter, Avatar, Tooltip } from "@chakra-ui/react";
-import { Navbar, Container, Form, Button, NavDropdown } from "react-bootstrap";
+import { BiSearchAlt } from "react-icons/bi";
+import { Drawer, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, useToast, DrawerFooter, Avatar, Tooltip, Button, Input, FormControl, InputLeftElement, InputGroup, InputRightElement, DrawerOverlay, DrawerCloseButton, Box, Stack, Skeleton, Spinner, ModalOverlay, ModalContent } from "@chakra-ui/react";
+import { Navbar, Container, Form, NavDropdown, Modal } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import IMAGES from "../../images/Images";
 import cookie from "js-cookie";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import UserListItem from "../UserListItem/UserListItem";
+import { ChatState } from "../Context/ChatProvider";
+import SkeletonCustom from "../SkeletonCustom/SkeletonCustom";
 
 function Header() {
 
     const [cook, setCook] = useState(cookie.get("token"));
+    const [id, setId] = useState(cookie.get("_id"));
     const [cookProfile, setCookProfile] = useState(cookie.get("img"));
+    const [clear, setClear] = useState(false);
     const [cookName, setCookName] = useState(cookie.get("name"));
     const toast = useToast();
-
+    const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [searchResult, setSearchResult] = useState([]);
+    const { selectedChat, setSelectedChat, setChats, chats, loadingChat, setLoadingChat } = ChatState();
     const { isOpen, onOpen, onClose } = useDisclosure();
+
     const navigate = useNavigate();
     const location = useLocation();
+
+    const handleSearch = (e) => {
+        setSearch(e.target.value);
+    }
 
     const handleLoginClick = async (event) => {
         event.preventDefault();
@@ -27,13 +42,14 @@ function Header() {
     }
 
     const handleBrand = async () => {
-        navigate('/');
+        navigate('/chat');
     }
 
     const handleLogout = async () => {
         cookie.remove("token");
         cookie.remove("name");
         cookie.remove("img");
+        cookie.remove("_id");
         toast({
             title: "Logged out Successfully!",
             status: "success",
@@ -41,17 +57,83 @@ function Header() {
             isClosable: true,
             position: "bottom"
         });
-        navigate("/");
+        setChats([]);
+        setSelectedChat("");
+        setCook("");
+        setCookName("");
+        setCookProfile("");
+        setId("");
+        navigate("/auth/login");
+    }
+
+    const handleSearchSubmit = async (e) => {
+        e.preventDefault();
+        if (!search) {
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const s = await axios.get(`/api/search/${search}`);
+            setLoading(false);
+            setSearchResult(s.data);
+            if (s.data.length === 0) {
+                toast({
+                    title: "No such user",
+                    status: 'warning',
+                    duration: 4000,
+                    isClosable: true,
+                    position: "bottom-left"
+                })
+            }
+
+        } catch (error) {
+            console.log(error);
+            toast({
+                title: "Something went wrong",
+                description: "failed to load data",
+                status: 'error',
+                duration: 4000,
+                isClosable: true,
+                position: "bottom-left"
+            });
+        }
+
+    }
+
+    const accessChat = async (userId) => {
+        try {
+            setLoadingChat(true);
+            const { data } = await axios.post("/api/chat", { userId });
+            if (!chats.find((it) => it._id === data._id))
+                setChats([data, ...chats]);
+            setSelectedChat(data);
+            setLoadingChat(false);
+            setSearchResult([]);
+            setSearch("");
+            onClose();
+        } catch (error) {
+            console.log(error);
+            toast({
+                title: "Error fetching the chat",
+                description: error.message,
+                status: 'error',
+                duration: 4000,
+                isClosable: true,
+                position: "bottom-left"
+            });
+        }
     }
 
     useEffect(() => {
+        setId(cookie.get("_id"));
         setCook(cookie.get("token"));
         setCookProfile(cookie.get("img"));
         setCookName(cookie.get("name"));
     });
 
-    const option = { display: "flex", marginLeft: '2.45rem', fontWeight: "630", marginTop: "1.9rem" }
-    const obj = { display: "flex", marginLeft: '2.45rem', fontWeight: "630" }
+    // const option = { display: "flex", marginLeft: '2.45rem', fontWeight: "630", marginTop: "1.9rem" }
+    // const obj = { display: "flex", marginLeft: '2.45rem', fontWeight: "630" }
 
     return (
         <>
@@ -66,8 +148,9 @@ function Header() {
                         className="headerDrawer"
                     >
                         <DrawerContent>
+                            <DrawerCloseButton />
                             <DrawerHeader className="menuHeader" style={(location.pathname === '/auth/login' || location.pathname === '/auth/register') ? { paddingTop: "0.52rem" } : {}}>
-                                <Container className="m-0" style={{ padding: '0' }}>
+                                {/* <Container className="m-0" style={{ padding: '0' }}>
                                     <div style={{
                                         display: "flex",
                                         marginLeft: '1.7rem'
@@ -83,42 +166,95 @@ function Header() {
                                             alt="Navbar logo"
                                         />FluxChat</span>
                                     </div>
+                                </Container> */}
+                                <Container className="m-0" style={{ padding: '0' }}>
+                                    <span className="menuIcon" style={{ fontSize: "1.5rem", marginLeft: "1.7rem", marginBottom: "0.3rem", color: "ghostwhite" }} onClick={handleBrand}><img
+                                        src={IMAGES.icon}
+                                        width="34"
+                                        height="34"
+                                        className="d-inline-block align-top m-1"
+                                        alt="Navbar logo"
+                                    />FluxChat</span>
                                 </Container>
                             </DrawerHeader>
+                            <DrawerHeader className="menuHeader">
+                                <form className="m-0 p-0 b-0">
+                                    <FormControl className="p-0 m-0 d-flex" onClick={onOpen}>
+                                        <InputGroup>
+                                            <Input className="form-control" type='text' placeholder="Search here" size="md" value={search} onChange={handleSearch} color="black" fontSize="large" backgroundColor="red.100" autoFocus />
+                                        </InputGroup>
+                                        <Button type="submit" colorScheme='red' style={{ marginLeft: "0.4rem", fontSize: "1.5rem", fontWeight: "bold" }}
+                                            onClick={handleSearchSubmit}
+                                        ><IoSearch /></Button>
+                                    </FormControl>
+                                </form>
+                            </DrawerHeader>
                             <DrawerBody className="menuBody">
-
-
-
+                                {!clear && (loading ? <Stack>
+                                    <SkeletonCustom />
+                                    <SkeletonCustom />
+                                    <SkeletonCustom />
+                                    <SkeletonCustom />
+                                    <SkeletonCustom />
+                                    <SkeletonCustom />
+                                </Stack> : (
+                                    searchResult ? searchResult.map((it) => {
+                                        return (<UserListItem key={it._id} user={it} handleOnClick={function () { accessChat(it._id) }} />);
+                                    }) : <></>
+                                ))}
 
                             </DrawerBody>
-
-                            <DrawerFooter className="menuFooter">
+                            <DrawerFooter height="10" backgroundColor="#1a202c">
                             </DrawerFooter>
                         </DrawerContent>
                     </Drawer>
                     <div style={{ display: "flex", marginLeft: '2.45rem', fontWeight: "630" }}>
-                        <div onClick={onOpen} style={{ fontSize: "x-large", marginTop: "0.42rem", paddingRight: "0.7rem" }} className="menuIcon">
+                        {/* <div onClick={onOpen} style={{ fontSize: "x-large", marginTop: "0.42rem", paddingRight: "0.7rem" }} className="menuIcon">
                             <AiOutlineMenu variant="primary" />
-                        </div>
-                        <span className="menuIcon" style={{ fontSize: "1.5rem", marginTop: "0.07rem" }} onClick={handleBrand}><img
+                        </div> */}
+                        <span className="menuIcon" style={{ fontSize: "1.5rem", marginTop: "0.07rem", color: "ghostwhite" }} onClick={handleBrand}><img
                             src={IMAGES.icon}
-                            width="40"
-                            height="40"
-                            className="d-inline-block align-top"
+                            width="34"
+                            height="34"
+                            className="d-inline-block align-top m-1"
                             alt="Navbar logo"
                         />FluxChat</span>
                     </div>
 
-                    <Navbar.Collapse id="navbarScroll" />
+
+                    {cook ? <Container className="p-0 m-0" style={{ width: "10rem", justifyContent: "center", display: "flex" }}>
+                        <FormControl className="p-0 m-0" onClick={onOpen}>
+                            <Tooltip label="Search users by name or email" hasArrow>
+                                <InputGroup>
+                                    <Input className="form-control p-0 m-0" type='text' />
+                                    <InputLeftElement onClick={onOpen}>
+                                        <Button style={{ backgroundColor: "inherit", fontSize: "large" }}>
+                                            <span><BiSearchAlt style={{ fontSize: "1.6rem", color: "ghostwhite" }} /></span>
+                                        </Button>
+                                    </InputLeftElement>
+                                    <InputRightElement onClick={onOpen}>
+                                        <Button style={{ backgroundColor: "inherit", paddingRight: "1rem", wdith: "fit-content", marginRight: "6.4rem", color: "ghostwhite" }}>
+                                            Search users
+                                        </Button>
+                                    </InputRightElement>
+                                </InputGroup>
+                            </Tooltip>
+                        </FormControl>
+                    </Container> : <></>}
+
                     {(location.pathname !== '/auth/login' && location.pathname !== '/auth/register') ? (!cook ? <Form className="d-flex loginButton">
                         <Button variant="outline-success" style={{ padding: '0.8rem', width: "5.5rem", marginRight: "4rem", fontSize: "1.05rem" }} onClick={handleLoginClick}>Login</Button>
-                    </Form> : (<NavDropdown title={<><Avatar size="md" bg='teal.500' icon={<AiOutlineUser fontSize='1.8rem' />} />  </>} id="collapsible-nav-dropdown" className="m2" style={{ marginRight: "7rem" }}>
-                        <Tooltip hasArrow label={cookName}><NavDropdown.Item><div className="m-0 p-0 d-flex"><FaUserLarge fontSize="1.2rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " My profile"}</span></div></NavDropdown.Item></Tooltip>
+                    </Form> : (<NavDropdown title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />  </>} id="collapsible-nav-dropdown" className="m2" style={{
+                        marginRight: "3rem",
+                        width: "7rem",
+                        boxShadow: "none"
+                    }} >
+                        <Tooltip hasArrow label={cookName}><NavDropdown.Item> <div className="m-0 p-0 d-flex"><FaUserLarge fontSize="1.2rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " My profile"}</span></div></NavDropdown.Item></Tooltip>
                         <NavDropdown.Divider />
                         <NavDropdown.Item><div className="m-0 p-0 d-flex" onClick={handleLogout}><TbLogout2 fontSize="1.6rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " Logout"}</span></div></NavDropdown.Item>
-
-                    </NavDropdown>)) : <></>}
-                </Container>
+                    </NavDropdown >)) : <></>
+                    }
+                </Container >
             </Navbar >
         </>
     )

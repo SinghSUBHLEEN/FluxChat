@@ -22,12 +22,12 @@ router.post('/auth/login', async (req, res) => {
                         res.status(400).json({ message: "", error: "Password does not match" });
                     else {
                         const payload = {
-                            id: getUser._id,
+                            id: String(getUser._id),
                         };
                         const option = {};
                         if (rem) option.maxAge = 1000 * 60 * 60 * 24 * 15;
                         const token = jwt.sign(payload, process.env.JWT_KEY);
-                        res.status(202).cookie('token', token, option).cookie('name', getUser.name, option).cookie('img', getUser.profile, option).json({ message: "Welcome", error: "" });
+                        res.status(202).cookie('token', token, option).cookie('name', getUser.name, option).cookie('img', getUser.profile, option).cookie("_id", payload.id, option).json({ message: "Welcome", error: "" });
                     }
                 }
             })
@@ -59,12 +59,12 @@ router.post('/auth/register', async (req, res) => {
                             res.status(500).json({ message: "", error: "Something went wrong" });
                         else {
                             const payload = {
-                                id: newUser._id,
+                                id: String(newUser._id),
                             };
                             const option = {};
                             if (rem) option.maxAge = 1000 * 60 * 60 * 24 * 15;
                             const token = jwt.sign(payload, process.env.JWT_KEY);
-                            res.status(202).cookie('token', token, option).cookie('name', newUser.name, option).cookie('img', newUser.profile, option).json({ message: "Welcome", error: "" });
+                            res.status(202).cookie('token', token, option).cookie('name', newUser.name, option).cookie('img', newUser.profile, option).cookie("_id", payload.id, option).json({ message: "Welcome", error: "" });
                         }
                     }
                 });

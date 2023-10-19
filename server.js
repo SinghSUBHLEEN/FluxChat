@@ -23,10 +23,13 @@ app.use(express.static(__dirname + '/client/dist'));
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////* Routes */
 
-const authRouter = require("./routes/userRoutes");
+const userRouter = require("./routes/userRoutes");
+const searchRouter = require("./routes/searchRoutes");
+const chatRouter = require("./routes/chatRoutes");
 
-app.use("/api/users", authRouter);
-
+app.use("/api/users", userRouter);
+app.use("/api/search", searchRouter);
+app.use("/api/chat", chatRouter);
 
 // const usersRouter = require('./routes/users');
 
@@ -40,7 +43,7 @@ const corsOption = {
 }
 
 app.all('*', cors(corsOption), (req, res) => {
-    res.status(201).sendFile(__dirname + "/index.html");
+    res.status(201).sendFile(__dirname + "/client/dist/index.html");
 })
 
 
