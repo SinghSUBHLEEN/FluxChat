@@ -12,7 +12,7 @@ import ScrChat from './ScrChat';
 import io from "socket.io-client";
 
 
-const endPt = "http://localhost:5000/";
+const endPt = "https://fluxchat.onrender.com";
 var socket, selectedChatCompare;
 
 function SingleChat({ fetchAgain, setFetchAgain }) {
