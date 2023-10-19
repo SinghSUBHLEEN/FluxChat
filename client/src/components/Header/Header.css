@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     border: 0;
-    background-color: #1a202c;
+    background-color: #0f0f0f;
 }
 
 .Inner {
@@ -12,17 +12,17 @@
 .menuHeader {
     font-size: x-large;
     color: black;
-    background-color: #1a202c;
+    background-color: #0f0f0f;
     /* border-radius: 100%; */
 }
 
 .menuFooter {
-    background-color: #1a202c;
+    background-color: #0f0f0f;
 }
 
 
 .menuBody {
-    background-color: #1a202c;
+    background-color: #0f0f0f;
 }
 
 .Navbar.Brand {
@@ -45,11 +45,11 @@
 }
 
 .headerDrawer {
-    background-color: #d9e3f1;
+    background-color: #0f0f0f;
 }
 
 .menuHeader {
-    background-color: #1a202c;
+    background-color: #0f0f0f;
     margin: 0;
 }
 
@@ -61,4 +61,8 @@
 
 .dropdown-toggle::after {
     display: none !important;
+}
+
+.NavDropdown.show {
+    background-color: white;
 }

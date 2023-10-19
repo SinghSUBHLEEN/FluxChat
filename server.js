@@ -31,7 +31,7 @@ const messageRouter = require("./routes/messageRoutes");
 app.use("/api/users", userRouter);
 app.use("/api/search", searchRouter);
 app.use("/api/chat", chatRouter);
-app.use("./api/message", messageRouter);
+app.use("/api/message", messageRouter);
 
 // const usersRouter = require('./routes/users');
 
@@ -52,10 +52,33 @@ app.all('*', cors(corsOption), (req, res) => {
 const io = socket(currServer, {
     cors: {
         origin: "*",
-        methods: ["GET", "POST", "PUT"]
-    }
+        methods: ["GET", "POST", "PUT"],
+    },
+    pingTimeout: 60000,
 });
 
 io.on("connection", socket => {
     io.emit("all", { message: "New user joined the chat", _id: socket.id });
+    socket.on("setup", (userId) => {
+        socket.join(userId);
+        socket.emit('connected', { message: "connected to socket.io" });
+    })
+
+    socket.on("join_chat", (room) => {
+        socket.join(room);
+    })
+
+    socket.on("new_message", (obj) => {
+        let chat = obj.chat;
+        if (!chat.users) return;
+
+        chat.users.forEach(it => {
+            if (it._id === obj.sender._id) return;
+            socket.in(it._id).emit("message_recieved", obj);
+        });
+
+    })
+
+    socket.on("typing", (room) => socket.in(room).emit("typing"));
+    socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 })

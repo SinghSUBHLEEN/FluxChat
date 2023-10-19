@@ -181,7 +181,7 @@ function Header() {
                                 <form className="m-0 p-0 b-0">
                                     <FormControl className="p-0 m-0 d-flex" onClick={onOpen}>
                                         <InputGroup>
-                                            <Input className="form-control" type='text' placeholder="Search here" size="md" value={search} onChange={handleSearch} color="black" fontSize="large" backgroundColor="red.100" autoFocus />
+                                            <Input type='text' placeholder="Search here" size="md" value={search} onChange={handleSearch} color="white  " fontSize="large" bg="whiteAlpha.50" borderWidth="thin" />
                                         </InputGroup>
                                         <Button type="submit" colorScheme='red' style={{ marginLeft: "0.4rem", fontSize: "1.5rem", fontWeight: "bold" }}
                                             onClick={handleSearchSubmit}
@@ -226,14 +226,14 @@ function Header() {
                         <FormControl className="p-0 m-0" onClick={onOpen}>
                             <Tooltip label="Search users by name or email" hasArrow>
                                 <InputGroup>
-                                    <Input className="form-control p-0 m-0" type='text' />
+                                    <Input className="p-0 m-0" type='text' borderColor="gray" />
                                     <InputLeftElement onClick={onOpen}>
                                         <Button style={{ backgroundColor: "inherit", fontSize: "large" }}>
-                                            <span><BiSearchAlt style={{ fontSize: "1.6rem", color: "ghostwhite" }} /></span>
+                                            <span><BiSearchAlt style={{ fontSize: "1.6rem", color: "gray" }} /></span>
                                         </Button>
                                     </InputLeftElement>
                                     <InputRightElement onClick={onOpen}>
-                                        <Button style={{ backgroundColor: "inherit", paddingRight: "1rem", wdith: "fit-content", marginRight: "6.4rem", color: "ghostwhite" }}>
+                                        <Button style={{ backgroundColor: "inherit", paddingRight: "1rem", wdith: "fit-content", marginRight: "6.4rem", color: "gray" }}>
                                             Search users
                                         </Button>
                                     </InputRightElement>
@@ -244,12 +244,12 @@ function Header() {
 
                     {(location.pathname !== '/auth/login' && location.pathname !== '/auth/register') ? (!cook ? <Form className="d-flex loginButton">
                         <Button variant="outline-success" style={{ padding: '0.8rem', width: "5.5rem", marginRight: "4rem", fontSize: "1.05rem" }} onClick={handleLoginClick}>Login</Button>
-                    </Form> : (<NavDropdown title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />  </>} id="collapsible-nav-dropdown" className="m2" style={{
+                    </Form> : (<NavDropdown title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />  </>} id="collapsible-nav-dropdown" style={{
                         marginRight: "3rem",
                         width: "7rem",
-                        boxShadow: "none"
+                        boxShadow: "none",
                     }} >
-                        <Tooltip hasArrow label={cookName}><NavDropdown.Item> <div className="m-0 p-0 d-flex"><FaUserLarge fontSize="1.2rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " My profile"}</span></div></NavDropdown.Item></Tooltip>
+                        <Tooltip hasArrow label={cookName}><NavDropdown.Item style={{}}> <div className="m-0 p-0 d-flex"><FaUserLarge fontSize="1.2rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " My profile"}</span></div></NavDropdown.Item></Tooltip>
                         <NavDropdown.Divider />
                         <NavDropdown.Item><div className="m-0 p-0 d-flex" onClick={handleLogout}><TbLogout2 fontSize="1.6rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " Logout"}</span></div></NavDropdown.Item>
                     </NavDropdown >)) : <></>

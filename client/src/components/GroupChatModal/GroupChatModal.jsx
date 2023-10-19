@@ -1,5 +1,5 @@
 import { ModalCloseButton, ModalContent, ModalFooter, ModalOverlay, Text, useDisclosure, Button, Modal, ModalBody, ModalHeader, useToast, FormControl, Input, Stack, Skeleton, Box } from '@chakra-ui/react'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChatState } from '../Context/ChatProvider';
 import axios from 'axios';
 import { BiSearch } from 'react-icons/bi';
@@ -16,8 +16,23 @@ export default function GroupChatModal({ children }) {
     const [searchResult, setSearchResult] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    const [state, setState] = useState(0);
     const { chats, setChats } = ChatState();
     const toast = useToast();
+
+    useEffect(() => {
+        setLoading(false);
+        setSearchResult([]);
+        setSearch("");
+        setSelectedUsers([]);
+        setGroupChatName("");
+    }, [state]);
+
+    const reset = () => {
+        onClose();
+        setState(state + 1);
+        setState(state - 1);
+    }
 
 
     const handleAdd = async (user) => {
@@ -118,7 +133,7 @@ export default function GroupChatModal({ children }) {
 
         <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="md">
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent bg="#151515" color="whiteAlpha.800">
                 <ModalHeader fontSize="27px"><span>Create Group</span></ModalHeader>
                 <ModalCloseButton />
                 <ModalBody d="flex" flexDir='column' alignItems="center" >
@@ -161,7 +176,7 @@ export default function GroupChatModal({ children }) {
                     <Button colorScheme='red' mr={3} onClick={handleSubmit} boxShadow="dark-lg">
                         Create
                     </Button>
-                    <Button variant='ghost' boxShadow="dark-lg">Cancel</Button>
+                    <Button variant="solid" colorScheme="whiteAlpha" onClick={reset}>Cancel</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal >
