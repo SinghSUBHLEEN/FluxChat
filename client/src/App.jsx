@@ -43,7 +43,7 @@ function App() {
     <div className='App'>
 
       <Routes>
-        <Route path="/" Component={Home} />
+        <Route path="/" Component={Chat} />
         <Route path="/chat" Component={Chat} />
         <Route path="/auth/login" Component={Login} />
         <Route path='/auth/register' Component={Register} />

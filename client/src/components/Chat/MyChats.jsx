@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo } from 'react'
 import { ChatState } from '../Context/ChatProvider';
 import { Avatar, Box, Button, FormControl, Input, InputGroup, InputLeftElement, Skeleton, SkeletonCircle, Stack, Text, Tooltip, useToast } from "@chakra-ui/react";
 import axios from 'axios';
@@ -171,4 +171,4 @@ function MyChats({ fetchAgain, setFetchAgain }) {
     </Box >;
 }
 
-export default MyChats
+export default memo(MyChats);

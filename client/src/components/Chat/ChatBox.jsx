@@ -1,4 +1,4 @@
-import { } from 'react';
+import { memo } from 'react';
 import { ChatState } from '../Context/ChatProvider';
 import { Box, useToast } from "@chakra-ui/react";
 import SingleChat from './SingleChat';
@@ -28,4 +28,4 @@ function ChatBox(props) {
     )
 }
 
-export default ChatBox
+export default memo(ChatBox);

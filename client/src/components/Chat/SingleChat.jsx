@@ -1,5 +1,5 @@
 import { Box, IconButton, Text, useToast } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, memo } from 'react'
 import { ChatState } from '../Context/ChatProvider';
 import { MdKeyboardBackspace } from "react-icons/md";
 import MessageIcon from '../../images/messageIcon';
@@ -8,7 +8,7 @@ import { getSender } from './chatLogic';
 import cookie from "js-cookie";
 
 
-export default function SingleChat({ fetchAgain, setFetchAgain }) {
+function SingleChat({ fetchAgain, setFetchAgain }) {
 
 
     const [messages, setMessages] = useState([]);
@@ -45,11 +45,25 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                 icon={<MdKeyboardBackspace fontSize="1.6rem" />}
             /><span style={{ marginLeft: "auto", marginRight: "auto" }}>{selectedChat.isGroupChat ? selectedChat.chatName : getSender(cookie.get("_id"), selectedChat.users)}</span></Text> : <></>}
 
-        {selectedChat ? <></> : <Box display="flex" alignItems="center" justifyContent="center" height="100%">
+        {!selectedChat ? <Box display="flex" alignItems="center" justifyContent="center" height="100%">
             <Text fontSize="3xl" pb={3} display="flex">
                 <MessageIcon width={80} height={80} />
                 <span style={{ marginTop: "auto", display: "flex" }}>Start Chatting<SyncLoader size={5} style={{ marginBottom: "7px", marginTop: "auto" }} /></span>
             </Text>
-        </Box>}
+        </Box> : <>
+            <Box d="flex"
+                flexDir="column"
+                justifyContent="flex-end"
+                p={3}
+                bg="red.50"
+                boxShadow="dark-lg"
+                w="100%"
+                h="100%"
+                borderRadius="lg"
+                overflowY="scroll"></Box>
+        </>}
     </>
 }
+
+
+export default memo(SingleChat);

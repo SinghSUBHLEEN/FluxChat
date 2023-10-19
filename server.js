@@ -26,10 +26,12 @@ app.use(express.static(__dirname + '/client/dist'));
 const userRouter = require("./routes/userRoutes");
 const searchRouter = require("./routes/searchRoutes");
 const chatRouter = require("./routes/chatRoutes");
+const messageRouter = require("./routes/messageRoutes");
 
 app.use("/api/users", userRouter);
 app.use("/api/search", searchRouter);
 app.use("/api/chat", chatRouter);
+app.use("./api/message", messageRouter);
 
 // const usersRouter = require('./routes/users');
 
@@ -49,7 +51,7 @@ app.all('*', cors(corsOption), (req, res) => {
 
 const io = socket(currServer, {
     cors: {
-        origin: "localhost:5173",
+        origin: "*",
         methods: ["GET", "POST", "PUT"]
     }
 });
