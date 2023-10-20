@@ -1,6 +1,6 @@
 import { useEffect, useState, memo } from 'react'
 import { ChatState } from '../Context/ChatProvider';
-import { Avatar, Badge, Box, Button, FormControl, Input, InputGroup, InputLeftElement, Skeleton, SkeletonCircle, Stack, Text, Tooltip, useToast } from "@chakra-ui/react";
+import { Avatar, Badge, Box, Button, FormControl, IconButton, Input, InputGroup, InputLeftElement, Skeleton, SkeletonCircle, Stack, Text, Tooltip, useToast } from "@chakra-ui/react";
 import axios from 'axios';
 import cookie from "js-cookie";
 import { HiUserGroup } from "react-icons/hi2";
@@ -24,7 +24,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
             const { data } = await axios.get("/api/chat");
             setLoading(false);
             setChats(data);
-
+            console.log(data);
         } catch (error) {
             console.log(error);
             toast({
@@ -77,17 +77,25 @@ function MyChats({ fetchAgain, setFetchAgain }) {
             w="100%"
             justifyContent="space-between"
             alignItems="center"
-        >Chats
+        ><span>Chats</span>
             <GroupChatModal>
                 <Tooltip label="create group" hasArrow >
-                    <Button
+                    {/* <Button
                         d="flex"
-                        fontSize="x-large"
-                        colorScheme='red'
                         float="right"
                         m={2}>
                         <HiUserGroup />
-                    </Button>
+                    </Button> */}
+                    <IconButton isRound={true}
+                        colorScheme='red'
+                        d="flex"
+                        aria-label='Call Segun'
+                        size='lg'
+                        float="right"
+                        mb={2}
+                        fontSize="x-large"
+                        color="white"
+                        icon={<HiUserGroup fontSize="25px" />} />
                 </Tooltip>
             </GroupChatModal>
 
@@ -96,7 +104,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                     <InputLeftElement pointerEvents='none'>
                         <BiSearch fontSize="1.3rem" />
                     </InputLeftElement>
-                    <Input type='text' placeholder='Search chats' backgroundColor="whiteAlpha.200" onChange={(e) => setSearch(e.target.value)} value={search} border={0} />
+                    <Input type='text' placeholder='Search chats' backgroundColor="whiteAlpha.200" onChange={(e) => setSearch(e.target.value)} value={search} borderRadius="3xl" borderWidth='0' autoComplete='off' />
                 </InputGroup>
             </FormControl>
 
@@ -124,7 +132,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                                         cursor="pointer"
                                         overflowY="hidden"
                                         d="flex"
-                                        bg={selectedChat === chat ? "red.400" : "whiteAlpha.100"}
+                                        bg={selectedChat === chat ? "rgba(99,179,237, 0.7)" : "whiteAlpha.100"}
                                         w="100%"
                                         px={3}
                                         py={2}

@@ -4597,7 +4597,7 @@ fieldset:disabled .btn {
 }
 
 .navbar-nav .dropdown-menu {
-    position: static
+    position: static,
 }
 
 .navbar-text {

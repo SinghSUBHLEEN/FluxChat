@@ -66,3 +66,11 @@
 .NavDropdown.show {
     background-color: white;
 }
+
+.customElement:hover {
+    color: gray;
+}
+
+.customElement {
+    color: white;
+}

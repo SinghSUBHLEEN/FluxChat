@@ -1,4 +1,4 @@
-import { ModalCloseButton, ModalContent, ModalFooter, ModalOverlay, Text, useDisclosure, Button, Modal, ModalBody, ModalHeader, useToast, FormControl, Input, Stack, Skeleton, Box } from '@chakra-ui/react'
+import { ModalCloseButton, ModalContent, ModalFooter, ModalOverlay, Text, useDisclosure, Button, Modal, ModalBody, ModalHeader, useToast, FormControl, Input, Stack, Skeleton, Box, IconButton } from '@chakra-ui/react'
 import { useEffect, useState } from 'react';
 import { ChatState } from '../Context/ChatProvider';
 import axios from 'axios';
@@ -138,14 +138,31 @@ export default function GroupChatModal({ children }) {
                 <ModalCloseButton />
                 <ModalBody d="flex" flexDir='column' alignItems="center" >
                     <FormControl>
-                        <Input placeholder='Group name' mb={3}
-                            value={groupChatName} onChange={(e) => setGroupChatName(e.target.value)}></Input>
+                        <Input
+                            placeholder='Group name'
+                            mb={3}
+                            value={groupChatName} onChange={(e) => setGroupChatName(e.target.value)}
+                            borderWidth="thin"
+                            borderColor="gray"
+                            autoComplete='off'
+                            borderRadius="3xl"
+                        />
                     </FormControl>
                     <form className='m-0 p-0'>
                         <FormControl className='d-flex'>
-                            <Input placeholder='Add users' mb={4}
-                                onChange={e => setSearch(e.target.value)} autoComplete='off' />
-                            <Button type="submit" colorScheme='red' fontSize="1.7rem" mx={2} p={3} onClick={handleSearch}><BiSearch /></Button>
+                            <Input
+                                placeholder='Add users'
+                                mb={4}
+                                onChange={e => setSearch(e.target.value)}
+                                autoComplete='off'
+                                borderWidth="thin"
+                                borderColor="gray"
+                                borderRadius="3xl"
+                            />
+
+
+
+                            <IconButton isRound="true" type="submit" colorScheme='red' fontSize="1.7rem" mx={2} px={4} onClick={handleSearch} icon={<BiSearch />} />
                         </FormControl>
                     </form>
                     {/* render selected users */}

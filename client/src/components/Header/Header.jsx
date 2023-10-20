@@ -4,8 +4,8 @@ import { TbLogout2 } from "react-icons/tb";
 import { IoSearch } from "react-icons/io5";
 import { FaUserLarge } from "react-icons/fa6";
 import { BiSearchAlt } from "react-icons/bi";
-import { Drawer, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, useToast, DrawerFooter, Avatar, Tooltip, Button, Input, FormControl, InputLeftElement, InputGroup, InputRightElement, DrawerOverlay, DrawerCloseButton, Box, Stack, Skeleton, Spinner, ModalOverlay, ModalContent } from "@chakra-ui/react";
-import { Navbar, Container, Form, NavDropdown, Modal } from "react-bootstrap";
+import { Drawer, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, useToast, DrawerFooter, Avatar, Tooltip, Button, Input, FormControl, InputLeftElement, InputGroup, InputRightElement, DrawerOverlay, DrawerCloseButton, Box, Stack, Skeleton, Spinner, ModalOverlay, ModalContent, Menu, MenuButton, MenuList, MenuItem, IconButton } from "@chakra-ui/react";
+import { Navbar, Container, Form, NavDropdown, Modal, Dropdown, DropdownButton } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import IMAGES from "../../images/Images";
 import cookie from "js-cookie";
@@ -132,6 +132,8 @@ function Header() {
         setCookName(cookie.get("name"));
     });
 
+    const D = <Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />
+
     // const option = { display: "flex", marginLeft: '2.45rem', fontWeight: "630", marginTop: "1.9rem" }
     // const obj = { display: "flex", marginLeft: '2.45rem', fontWeight: "630" }
 
@@ -168,7 +170,7 @@ function Header() {
                                     </div>
                                 </Container> */}
                                 <Container className="m-0" style={{ padding: '0' }}>
-                                    <span className="menuIcon" style={{ fontSize: "1.5rem", marginLeft: "1.7rem", marginBottom: "0.3rem", color: "ghostwhite" }} onClick={handleBrand}><img
+                                    <span className="menuIcon" style={{ fontSize: "1.5rem", marginLeft: "0px", marginBottom: "0.3rem", color: "ghostwhite" }} onClick={handleBrand}><img
                                         src={IMAGES.icon}
                                         width="34"
                                         height="34"
@@ -181,11 +183,16 @@ function Header() {
                                 <form className="m-0 p-0 b-0">
                                     <FormControl className="p-0 m-0 d-flex" onClick={onOpen}>
                                         <InputGroup>
-                                            <Input type='text' placeholder="Search here" size="md" value={search} onChange={handleSearch} color="white  " fontSize="large" bg="whiteAlpha.50" borderWidth="thin" />
+                                            <Input type='text' placeholder="Search users" size="md" value={search} onChange={handleSearch} color="white  " fontSize="large" bg="whiteAlpha.50" borderWidth="thin" borderColor="gray" autoComplete="off" borderRadius="3xl" />
                                         </InputGroup>
-                                        <Button type="submit" colorScheme='red' style={{ marginLeft: "0.4rem", fontSize: "1.5rem", fontWeight: "bold" }}
+                                        <IconButton type="submit" colorScheme="red" isRound="true"
+                                            fontSize="3xl"
+                                            ml={2}
+                                            px={4}
                                             onClick={handleSearchSubmit}
-                                        ><IoSearch /></Button>
+                                            icon={<IoSearch />}
+                                            mx={2}
+                                        />
                                     </FormControl>
                                 </form>
                             </DrawerHeader>
@@ -204,11 +211,11 @@ function Header() {
                                 ))}
 
                             </DrawerBody>
-                            <DrawerFooter height="10" backgroundColor="#1a202c">
+                            <DrawerFooter height="10" backgroundColor="#0f0f0f">
                             </DrawerFooter>
                         </DrawerContent>
                     </Drawer>
-                    <div style={{ display: "flex", marginLeft: '2.45rem', fontWeight: "630" }}>
+                    <div style={{ display: "flex", marginLeft: '12px', fontWeight: "630", marginTop: "8px" }}>
                         {/* <div onClick={onOpen} style={{ fontSize: "x-large", marginTop: "0.42rem", paddingRight: "0.7rem" }} className="menuIcon">
                             <AiOutlineMenu variant="primary" />
                         </div> */}
@@ -222,7 +229,7 @@ function Header() {
                     </div>
 
 
-                    {cook ? <Container className="p-0 m-0" style={{ width: "10rem", justifyContent: "center", display: "flex" }}>
+                    {cook && <Container className="p-0 m-0" style={{ width: "10rem", justifyContent: "center", display: "flex" }}>
                         <FormControl className="p-0 m-0" onClick={onOpen}>
                             <Tooltip label="Search users by name or email" hasArrow>
                                 <InputGroup>
@@ -240,20 +247,21 @@ function Header() {
                                 </InputGroup>
                             </Tooltip>
                         </FormControl>
-                    </Container> : <></>}
+                    </Container>}
 
-                    {(location.pathname !== '/auth/login' && location.pathname !== '/auth/register') ? (!cook ? <Form className="d-flex loginButton">
-                        <Button variant="outline-success" style={{ padding: '0.8rem', width: "5.5rem", marginRight: "4rem", fontSize: "1.05rem" }} onClick={handleLoginClick}>Login</Button>
-                    </Form> : (<NavDropdown title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />  </>} id="collapsible-nav-dropdown" style={{
+                    {cook && <NavDropdown title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />  </>} id="collapsible-nav-dropdown" style={{
                         marginRight: "3rem",
-                        width: "7rem",
+                        // width: "7rem",
                         boxShadow: "none",
-                    }} >
-                        <Tooltip hasArrow label={cookName}><NavDropdown.Item style={{}}> <div className="m-0 p-0 d-flex"><FaUserLarge fontSize="1.2rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " My profile"}</span></div></NavDropdown.Item></Tooltip>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item><div className="m-0 p-0 d-flex" onClick={handleLogout}><TbLogout2 fontSize="1.6rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " Logout"}</span></div></NavDropdown.Item>
-                    </NavDropdown >)) : <></>
-                    }
+                        padding: "0"
+                    }} className="dropDown" >
+                        <Tooltip hasArrow label={cookName}><Dropdown.Item> <div className="m-0 p-0 d-flex customElement"><FaUserLarge fontSize="1.2rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " My profile"}</span></div></Dropdown.Item></Tooltip>
+                        <Dropdown.Divider />
+                        <Dropdown.Item><div className="m-0 p-0 d-flex customElement" onClick={handleLogout}><TbLogout2 fontSize="1.6rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " Logout"}</span></div></Dropdown.Item>
+                    </NavDropdown>}
+
+
+
                 </Container >
             </Navbar >
         </>

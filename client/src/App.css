@@ -1,3 +1,10 @@
 #bod {
     background-color: #060606;
 }
+
+.dropdown-menu.show {
+    background-color: #0f0f0f;
+    box-shadow: none;
+    color: white;
+    border: gray solid 1px;
+}
