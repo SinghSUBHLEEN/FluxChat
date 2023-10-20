@@ -7,13 +7,16 @@ import { SyncLoader } from "react-spinners";
 import { getSender } from './chatLogic';
 import cookie from "js-cookie";
 import { IoSendSharp } from "react-icons/io5";
-import { AiOutlineArrowUp } from "react-icons/ai";
+import { AiFillEdit, AiOutlineArrowUp } from "react-icons/ai";
 import axios from 'axios';
 import ScrChat from './ScrChat';
 import io from "socket.io-client";
 import { Dropdown, NavDropdown, Tooltip } from 'react-bootstrap';
 import { BsThreeDotsVertical } from "react-icons/bs";
-
+import Typing from "./Typing"
+import { CgLogOut } from "react-icons/cg";
+import { MdDelete } from "react-icons/md";
+import UpdateGroupModal from '../GroupChatModal/UpdateGroupModal';
 
 const endPt = "/";
 var socket, selectedChatCompare;
@@ -56,12 +59,11 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
 
     const fetchMessages = async () => {
         if (!selectedChat) return;
-
+        // console.log(selectedChat);
         try {
-
             setLoading(true);
             const { data } = await axios.get(`/api/message/${selectedChat._id}`);
-            console.log(data);
+            // console.log(data);
             setMessages(data);
             setLoading(false);
             socket.emit("join_chat", selectedChat._id);
@@ -77,15 +79,50 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         }
     }
 
+
+    const leaverGroupHandler = async () => {
+        if (selectedChat.groupAdmin[0]._id !== cookie.get("_id") && user._id !== cookie.get("_id")) {
+            toast({
+                title: "Only admin can remove members",
+                status: "warning",
+                duration: 4000,
+                position: 'bottom',
+                isClosable: true
+            })
+            return;
+        }
+        try {
+            const { data } = await axios.put(
+                `/api/chat/remove`,
+                {
+                    chatId: selectedChat._id,
+                    userId: cookie.get("_id"),
+                }
+            );
+            setSelectedChat();
+            setFetchAgain(!fetchAgain);
+            fetchMessages();
+        } catch (error) {
+            toast({
+                title: "Error Occured!",
+                description: error.response.data.message,
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom",
+            });
+        }
+    }
+
     const typingHandler = (e) => {
-        setNewMessage(e.target.value);
-        socket.emit("typing", selectedChat._id);
         if (!socketConnected) return;
+        setNewMessage(e.target.value);
         if (!typing) {
+            setTyping(true);
             socket.emit('typing', selectedChat._id);
         }
         let lastTypingTime = new Date().getTime();
-        const len = 1500;
+        const len = 3000;
         setTimeout(() => {
             var timeNow = new Date().getTime();
             var timeDiff = timeNow - lastTypingTime;
@@ -97,13 +134,11 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
     }
 
     useEffect(() => {
-        socket = io(endPt);
+        socket = io("localhost:5000");
         socket.emit("setup", cookie.get("_id"))
         socket.on("connected", () => {
             setSocketConnected(true);
         })
-        socket.on("typing", () => setIsTyping(true));
-        socket.on("stop typing", () => setIsTyping(false));
     }, []);
 
     useEffect(() => {
@@ -122,12 +157,22 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                 setMessages([...messages, obj]);
             }
         })
-    })
+        socket.on("typing", () => {
+            setIsTyping(true)
+            setTimeout(() => {
+                setIsTyping(false);
+            }, 4000)
+        });
+        socket.on("stop typing", () => {
+            setIsTyping(false)
+        });
+
+    });
 
 
     return <>
 
-        {selectedChat ? <Text
+        {selectedChat && <Text
             fontSize={{ base: "20px", md: "25px" }}
             p={3}
             w="100%"
@@ -135,6 +180,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
             display="flex"
             justifyContent={{ base: "space-between" }}
             alignItems="left"
+            borderWidth={0}
         > <IconButton
                 onClick={() => setSelectedChat("")}
                 isRound={true}
@@ -147,7 +193,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                 icon={<MdKeyboardBackspace fontSize="25px" />}
             /><span style={{ marginRight: "auto", marginLeft: "7px" }}>{(selectedChat.isGroupChat ? selectedChat.chatName : getSender(cookie.get("_id"), selectedChat.users)).length > 30 ? (selectedChat.isGroupChat ? selectedChat.chatName : getSender(cookie.get("_id"), selectedChat.users)).slice(0, 28) + "..." : (selectedChat.isGroupChat ? selectedChat.chatName : getSender(cookie.get("_id"), selectedChat.users))}</span>
 
-            <NavDropdown title={<IconButton isRound={true}
+            {selectedChat.isGroupChat && <NavDropdown title={<IconButton isRound={true}
                 variant="outline" size='md'
                 color="white"
                 borderWidth="0"
@@ -157,54 +203,69 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                     boxShadow: "none",
                     fontSize: "22px"
                 }} className="dropDown" >
-                <Dropdown.Item style={{ color: "white" }}> <div className="m-0 p-0 d-flex"><span>adasdadads</span></div></Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item style={{ color: "white" }}><div className="m-0 p-0 d-flex"><span>{" " + " Logout"}</span></div></Dropdown.Item>
-            </NavDropdown>
+                <UpdateGroupModal fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} fetchMessages={fetchMessages}><Dropdown.Item style={{ color: "white" }} >
 
+                    <Box className="m-0 p-0 d-flex" _hover={{ color: "gray" }}>
+                        <span className='mx-1'><AiFillEdit size="25px" /></span>
+                        <span>Edit group</span>
+                    </Box>
 
-        </Text> : <></>}
+                </Dropdown.Item>
+                </UpdateGroupModal>
+                <Dropdown.Divider className='my-1' />
+                <Dropdown.Item style={{ color: "white" }} onClick={leaverGroupHandler} >
+                    <Box className="m-0 p-0 d-flex" _hover={{ color: "gray" }}>
+                        <span className='mx-1'><CgLogOut size="25px" /></span>
+                        <span>Leave group</span>
+                    </Box>
+                </Dropdown.Item>
+            </NavDropdown>}
+        </Text>}
 
-        {!selectedChat ? <Box display="flex" alignItems="center" justifyContent="center" height="100%">
-            <Text fontSize="3xl" pb={3} display="flex">
-                <MessageIcon width={80} height={80} />
-                <span style={{ marginTop: "auto", display: "flex", marginLeft: "6px", marginRight: "10px" }}>Start Chatting<SyncLoader size={5} style={{ marginBottom: "7px", marginTop: "auto" }} color='white' speedMultiplier={0.6} /></span>
-            </Text>
-        </Box> : <>
-            <Box display="flex"
-                flexDir="column"
-                justifyContent="flex-end"
-                p={3}
-                bg="#060606"
-                boxShadow="dark-lg"
-                w="100%"
-                h="100%"
-                borderRadius="lg"
-                borderTopRadius="0"
-                overflowY="scroll">
-                {loading ? <>
-                    <Spinner color='red' size="xl" alignSelf="center" margin="auto" thickness='3px' />
-                </> :
-                    <>
-                        <div className='messages'><ScrChat messages={messages} /></div></>}
-                <form className='m-0 p-0'>
-                    {/* {istyping ? <div>Loading...</div> : <></>} */}
-                    <FormControl isRequired mt={3} display="flex">
-                        <Input
-                            borderWidth={0}
-                            bg="whiteAlpha.200"
-                            display="inline"
-                            placeholder='Type a message'
-                            value={newMessage}
-                            color="whiteAlpha.700"
-                            borderRadius="3xl"
-                            onChange={typingHandler}
-                        />
-                        <IconButton colorScheme="red" isRound="true" fontSize="2xl" type="submit" ml={2} icon={<AiOutlineArrowUp />} onClick={sendMessage} />
-                    </FormControl>
-                </form>
-            </Box>
-        </>}
+        {
+            !selectedChat ? <Box display="flex" alignItems="center" justifyContent="center" height="100%">
+                <Text fontSize="3xl" pb={3} display="flex">
+                    <MessageIcon width={80} height={80} />
+                    <span style={{ marginTop: "auto", display: "flex", marginLeft: "6px", marginRight: "10px" }}>Start Chatting<SyncLoader size={5} style={{ marginBottom: "7px", marginTop: "auto" }} color='white' speedMultiplier={0.6} /></span>
+                </Text>
+            </Box> : <>
+                <Box display="flex"
+                    flexDir="column"
+                    justifyContent="flex-end"
+                    p={3}
+                    bg="#060606"
+                    boxShadow="dark-lg"
+                    w="100%"
+                    h="100%"
+                    borderRadius="lg"
+                    borderTopRadius="0"
+                    overflowY="scroll">
+                    {loading ? <>
+                        <Spinner color='red' size="xl" alignSelf="center" margin="auto" thickness='3px' />
+                    </> :
+                        <>
+                            <div className='messages'><ScrChat messages={messages} typing={istyping} /></div></>}
+                    <form className='m-0 p-0'>
+                        <FormControl isRequired mt={3} display="flex">
+                            {/* {istyping ? <div style={{ fontSize: "10rem", color: "white" }}>Loading...</div> : <></>} */}
+                            {/* {istyping && <Typing />} */}
+                            <Input
+                                borderWidth={0}
+                                bg="whiteAlpha.200"
+                                display="inline"
+                                placeholder='Type a message'
+                                value={newMessage}
+                                color="whiteAlpha.700"
+                                borderRadius="3xl"
+                                onChange={typingHandler}
+                                autoComplete='off'
+                            />
+                            <IconButton colorScheme="red" isRound="true" fontSize="2xl" type="submit" ml={2} icon={<AiOutlineArrowUp />} onClick={sendMessage} />
+                        </FormControl>
+                    </form>
+                </Box>
+            </>
+        }
     </>
 }
 

@@ -10,8 +10,8 @@ function UserListItem({ handleOnClick, user }) {
         <Box
             onClick={handleOnClick}
             cursor="pointer"
-            _hover={{ backgroundColor: "blue.200" }}
-            bg="whiteAlpha.500"
+            _hover={{ backgroundColor: "rgba(99,179,237, 0.7)" }}
+            bg="whiteAlpha.200"
             w="100%"
             d="flex"
             alignItems="center"
@@ -30,7 +30,7 @@ function UserListItem({ handleOnClick, user }) {
                 src={user.profile}
             />
             <Box display="inline" px="3" style={{ marginTop: "auto", marginBottom: "auto" }}>
-                <span style={{ color: 'black', fontWeight: "500", fontSize: "large" }}>
+                <span style={{ color: 'white', fontWeight: "500", fontSize: "large" }}>
                     {user.name}
                 </span>
             </Box>

@@ -27,7 +27,7 @@ router.post('/auth/login', async (req, res) => {
                         const option = {};
                         if (rem) option.maxAge = 1000 * 60 * 60 * 24 * 15;
                         const token = jwt.sign(payload, process.env.JWT_KEY);
-                        res.status(202).cookie('token', token, option).cookie('name', getUser.name, option).cookie('img', getUser.profile, option).cookie("_id", payload.id, option).json({ message: "Welcome", error: "" });
+                        res.status(202).cookie('token', token, option).cookie('name', getUser.name, option).cookie('img', getUser.profile, option).cookie("_id", payload.id, option).cookie("email", getUser.email, option).json({ message: "Welcome", error: "" });
                     }
                 }
             })
@@ -64,7 +64,7 @@ router.post('/auth/register', async (req, res) => {
                             const option = {};
                             if (rem) option.maxAge = 1000 * 60 * 60 * 24 * 15;
                             const token = jwt.sign(payload, process.env.JWT_KEY);
-                            res.status(202).cookie('token', token, option).cookie('name', newUser.name, option).cookie('img', newUser.profile, option).cookie("_id", payload.id, option).json({ message: "Welcome", error: "" });
+                            res.status(202).cookie('token', token, option).cookie('name', newUser.name, option).cookie('img', newUser.profile, option).cookie("_id", payload.id, option).cookie("email", newUser.email, option).json({ message: "Welcome", error: "" });
                         }
                     }
                 });
@@ -72,5 +72,7 @@ router.post('/auth/register', async (req, res) => {
         }
     }
 });
+
+
 
 module.exports = router;

@@ -7,7 +7,7 @@ import { AiOutlineClose } from "react-icons/ai";
 
 function UserBadgeItem({ user, onDelete }) {
 
-    const arr = ["green.600", "orange.600", "blue.600", "pink.600", "yellow.600", "cyan.600", "red.600", "purple.600"];
+    const arr = ["green.600", "orange.600", "blue.600", "pink.600", "yellow.600", "cyan.600", "purple.600"];
 
     const item = arr[Math.floor(Math.random() * arr.length)];
 

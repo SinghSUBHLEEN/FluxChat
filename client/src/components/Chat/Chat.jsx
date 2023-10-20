@@ -23,7 +23,7 @@ function Chat() {
         if (!cook) navigate("/auth/login");
     }, [])
 
-    return (<>
+    return (<div className="d-flex" style={{ flexDirection: "column", width: "100%", height: "100%" }}>
         <Header />
         <div style={{ width: "100%" }}>
             {loadingChat && <>
@@ -47,7 +47,7 @@ function Chat() {
                 {cook && <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />}
             </Box>
         </div>
-    </>
+    </div>
     )
 }
 

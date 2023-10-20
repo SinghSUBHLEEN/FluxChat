@@ -3,8 +3,9 @@ import ScrollableFeed from 'react-scrollable-feed';
 import { isLastMessage, isSameSender, isSameSenderMargin, isSameUser } from "./chatLogic";
 import cookie from 'js-cookie';
 import { Avatar, Tooltip } from '@chakra-ui/react';
+import Typing from './Typing';
 
-function ScrChat({ messages }) {
+function ScrChat({ messages, typing }) {
 
 
     const [id, setid] = useState(cookie.get("_id"));
@@ -41,6 +42,7 @@ function ScrChat({ messages }) {
                     </span>
                 </div>
             ))}
+        {typing && <Typing />}
     </ScrollableFeed>)
 }
 

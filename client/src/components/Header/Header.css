@@ -74,3 +74,11 @@
 .customElement {
     color: white;
 }
+
+@media (max-width: 768px) {
+    #NavBar {
+        position: absolute;
+        width: 100%;
+        z-index: 9999;
+    }
+}

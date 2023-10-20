@@ -117,13 +117,26 @@ router.put("/rename", async (req, res) => {
 });
 
 // remove from group
-router.put("/removeGroup", async (req, res) => {
+router.put("/remove", async (req, res) => {
     const { chatId, userId } = req.body;
-    const removed = Chat.findByIdAndUpdate(chatId, { $pull: { users: userId } }, { new: true }).populate("users", "-password").populate("groupAdmin", "-password");
+
+    // check if the requester is admin
+
+    const removed = await Chat.findByIdAndUpdate(
+        chatId,
+        {
+            $pull: { users: userId },
+        },
+        {
+            new: true,
+        }
+    )
+        .populate("users", "-password")
+        .populate("groupAdmin", "-password");
 
     if (!removed) {
-        res.status(400);
-        throw new Error("Chat Not found");
+        res.status(404);
+        throw new Error("Chat Not Found");
     } else {
         res.json(removed);
     }
@@ -131,17 +144,26 @@ router.put("/removeGroup", async (req, res) => {
 
 
 // add to group
-router.put("/groupAdd", async (req, res) => {
+router.put("/add", async (req, res) => {
     const { chatId, userId } = req.body;
-    const added = Chat.findByIdAndUpdate(chatId, { $push: { users: userId } }, { new: true }).populate("users", "-password").populate("groupAdmin", "-password");
+    const added = await Chat.findByIdAndUpdate(
+        chatId,
+        {
+            $push: { users: userId },
+        },
+        {
+            new: true,
+        }
+    )
+        .populate("users", "-password")
+        .populate("groupAdmin", "-password");
 
     if (!added) {
-        res.status(400);
-        throw new Error("Chat Not found");
+        res.status(404);
+        throw new Error("Chat Not Found");
     } else {
         res.json(added);
     }
-
 });
 
 module.exports = router;

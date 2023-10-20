@@ -5,7 +5,7 @@ import { IoSearch } from "react-icons/io5";
 import { FaUserLarge } from "react-icons/fa6";
 import { BiSearchAlt } from "react-icons/bi";
 import { Drawer, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, useToast, DrawerFooter, Avatar, Tooltip, Button, Input, FormControl, InputLeftElement, InputGroup, InputRightElement, DrawerOverlay, DrawerCloseButton, Box, Stack, Skeleton, Spinner, ModalOverlay, ModalContent, Menu, MenuButton, MenuList, MenuItem, IconButton } from "@chakra-ui/react";
-import { Navbar, Container, Form, NavDropdown, Modal, Dropdown, DropdownButton } from "react-bootstrap";
+import { Navbar, Container, Form, NavDropdown, Modal, Dropdown, DropdownButton, Nav } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import IMAGES from "../../images/Images";
 import cookie from "js-cookie";
@@ -14,6 +14,8 @@ import axios from "axios";
 import UserListItem from "../UserListItem/UserListItem";
 import { ChatState } from "../Context/ChatProvider";
 import SkeletonCustom from "../SkeletonCustom/SkeletonCustom";
+import { AiOutlineMenu } from "react-icons/ai";
+import UserModal from "./UserModal";
 
 function Header() {
 
@@ -34,11 +36,6 @@ function Header() {
 
     const handleSearch = (e) => {
         setSearch(e.target.value);
-    }
-
-    const handleLoginClick = async (event) => {
-        event.preventDefault();
-        navigate('/auth/login');
     }
 
     const handleBrand = async () => {
@@ -132,15 +129,12 @@ function Header() {
         setCookName(cookie.get("name"));
     });
 
-    const D = <Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />
-
-    // const option = { display: "flex", marginLeft: '2.45rem', fontWeight: "630", marginTop: "1.9rem" }
-    // const obj = { display: "flex", marginLeft: '2.45rem', fontWeight: "630" }
-
     return (
         <>
-            <Navbar sticky="top" expand="sm" className="color-nav">
-                <Container fluid className="Inner">
+            <Navbar collapseOnSelect sticky="top" expand="sm" className="color-nav">
+
+                <Container fluid className="Inner" style={{ display: "flex" }}>
+                    {/* <Navbar.Toggle aria-controls="responsive-navbar-nav"><span><AiOutlineMenu color="white" /></span></Navbar.Toggle> */}
                     <Drawer
                         variant="secondary"
                         isOpen={isOpen}
@@ -215,7 +209,7 @@ function Header() {
                             </DrawerFooter>
                         </DrawerContent>
                     </Drawer>
-                    <div style={{ display: "flex", marginLeft: '12px', fontWeight: "630", marginTop: "8px" }}>
+                    <div style={{ float: "left", marginLeft: '12px', fontWeight: "630", marginTop: "8px" }}>
                         {/* <div onClick={onOpen} style={{ fontSize: "x-large", marginTop: "0.42rem", paddingRight: "0.7rem" }} className="menuIcon">
                             <AiOutlineMenu variant="primary" />
                         </div> */}
@@ -228,39 +222,51 @@ function Header() {
                         />FluxChat</span>
                     </div>
 
+                    <Navbar.Collapse
+                        id="responsive-navbar-nav" style={{ display: "flex", justifyContent: "flex-start" }}>
+                        {cook && <Container fluid className="p-0 mx-2" style={{ flex: 0.9 }}>
 
-                    {cook && <Container className="p-0 m-0" style={{ width: "10rem", justifyContent: "center", display: "flex" }}>
-                        <FormControl className="p-0 m-0" onClick={onOpen}>
                             <Tooltip label="Search users by name or email" hasArrow>
-                                <InputGroup>
-                                    <Input className="p-0 m-0" type='text' borderColor="gray" />
+                                <InputGroup
+                                    width="fit-content"
+                                    onClick={onOpen}
+                                    display="block"
+                                    mx={"auto"}
+                                >
+                                    <Input type='text' borderColor="gray" borderRadius="3xl" bg="whiteAlpha.200" placeholder="Search users" _placeholder={{ color: "gray" }} />
                                     <InputLeftElement onClick={onOpen}>
                                         <Button style={{ backgroundColor: "inherit", fontSize: "large" }}>
                                             <span><BiSearchAlt style={{ fontSize: "1.6rem", color: "gray" }} /></span>
                                         </Button>
                                     </InputLeftElement>
-                                    <InputRightElement onClick={onOpen}>
-                                        <Button style={{ backgroundColor: "inherit", paddingRight: "1rem", wdith: "fit-content", marginRight: "6.4rem", color: "gray" }}>
-                                            Search users
-                                        </Button>
-                                    </InputRightElement>
+                                    {/* <InputRightElement onClick={onOpen}>
+                                            <Button style={{ backgroundColor: "inherit", paddingRight: "1rem", wdith: "fit-content", marginRight: "6.4rem", color: "gray" }}>
+                                                {"........"}
+                                            </Button>
+                                        </InputRightElement> */}
                                 </InputGroup>
                             </Tooltip>
-                        </FormControl>
-                    </Container>}
 
-                    {cook && <NavDropdown title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />  </>} id="collapsible-nav-dropdown" style={{
-                        marginRight: "3rem",
-                        // width: "7rem",
-                        boxShadow: "none",
-                        padding: "0"
-                    }} className="dropDown" >
-                        <Tooltip hasArrow label={cookName}><Dropdown.Item> <div className="m-0 p-0 d-flex customElement"><FaUserLarge fontSize="1.2rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " My profile"}</span></div></Dropdown.Item></Tooltip>
-                        <Dropdown.Divider />
-                        <Dropdown.Item><div className="m-0 p-0 d-flex customElement" onClick={handleLogout}><TbLogout2 fontSize="1.6rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " Logout"}</span></div></Dropdown.Item>
-                    </NavDropdown>}
-
-
+                        </Container>}
+                        {cook && <div style={{ flex: 0.1, display: "block" }}><NavDropdown title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />  </>} id="collapsible-nav-dropdown" style={{
+                            marginRight: "3rem",
+                            // width: "7rem",
+                            boxShadow: "none",
+                            padding: "0"
+                        }} className="dropDown" >
+                            <UserModal>
+                                <Tooltip hasArrow label={cookName}>
+                                    <Dropdown.Item>
+                                        <div className="m-0 p-0 d-flex customElement">
+                                            <FaUserLarge fontSize="1.2rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " My profile"}</span>
+                                        </div>
+                                    </Dropdown.Item>
+                                </Tooltip>
+                            </UserModal>
+                            <Dropdown.Divider />
+                            <Dropdown.Item><div className="m-0 p-0 d-flex customElement" onClick={handleLogout}><TbLogout2 fontSize="1.6rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " Logout"}</span></div></Dropdown.Item>
+                        </NavDropdown></div>}
+                    </Navbar.Collapse>
 
                 </Container >
             </Navbar >

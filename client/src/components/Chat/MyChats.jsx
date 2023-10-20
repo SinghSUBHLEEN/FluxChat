@@ -24,7 +24,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
             const { data } = await axios.get("/api/chat");
             setLoading(false);
             setChats(data);
-            console.log(data);
+            // console.log(data);
         } catch (error) {
             console.log(error);
             toast({
@@ -99,7 +99,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                 </Tooltip>
             </GroupChatModal>
 
-            <FormControl className='mb-2'>
+            <FormControl className='mb-3'>
                 <InputGroup color="whiteAlpha.700">
                     <InputLeftElement pointerEvents='none'>
                         <BiSearch fontSize="1.3rem" />
@@ -157,7 +157,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                                                 <span style={{ display: "block", fontSize: "1.35rem", width: "100%" }}>
                                                     {(!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).length > 18 ? (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).slice(0, 16) + "..." : (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName)}
                                                 </span>
-                                                <span style={{ display: "block", fontSize: "medium" }}>{"latest message"}</span>
+                                                <span style={{ display: "block", fontSize: "medium" }}>{chat && chat.latestMessage ? chat.latestMessage.content : ""}</span>
                                             </div>
                                         </div>
                                         {/* <Text>
