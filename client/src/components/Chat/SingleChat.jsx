@@ -134,7 +134,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
     }
 
     useEffect(() => {
-        socket = io("localhost:5000");
+        socket = io(endPt);
         socket.emit("setup", cookie.get("_id"))
         socket.on("connected", () => {
             setSocketConnected(true);
