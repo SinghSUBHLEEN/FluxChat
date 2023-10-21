@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import cookie from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { ChatState } from "../Context/ChatProvider";
-import { Box, Modal, ModalContent, ModalOverlay, Spinner } from "@chakra-ui/react";
+import { Box, Modal, ModalContent, ModalOverlay, useToast } from "@chakra-ui/react";
 import Header from "../Header/Header";
 import "./Chat.css";
 import MyChats from "./MyChats";
@@ -15,13 +15,12 @@ function Chat() {
     const [cook, setCook] = useState(cookie.get("token"));
     const [search, setSearch] = useState(false);
     const [fetchAgain, setFetchAgain] = useState(false);
-
     const { loadingChat, setLoadingChat } = ChatState();
 
     useEffect(() => {
         setCook(cookie.get("token"));
         if (!cook) navigate("/auth/login");
-    }, [])
+    }, []);
 
     return (<div className="d-flex" style={{ flexDirection: "column", width: "100%", height: "100%" }}>
         <Header />

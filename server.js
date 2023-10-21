@@ -6,31 +6,6 @@ const cookieParser = require('cookie-parser');
 const socket = require("socket.io");
 const https = require('https');
 
-const handler = async (event, context) => {
-    const url = 'https://fluxchat.onrender.com/auth/login';
-
-    return new Promise((resolve, reject) => {
-        const req = https.get(url, (res) => {
-            if (res.statusCode === 200) {
-                console.log("done");
-                resolve({
-                    statusCode: 200,
-                    body: 'Server pinged successfully',
-                });
-            } else {
-                reject(
-                    new Error(`Server ping failed with status code: ${res.statusCode}`)
-                );
-            }
-        });
-
-        req.on('error', (error) => {
-            reject(error);
-        });
-
-        req.end();
-    });
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /* MongoDB Models and Connections */
@@ -108,4 +83,48 @@ io.on("connection", socket => {
 
     socket.on("typing", (room) => socket.in(room).emit("typing"));
     socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+    socket.on("fetch again", ({ users, chatName, admin }) => {
+        if (!users) return;
+        users.forEach(it => {
+            // if (it._id === ._id) return;
+            socket.in(it._id).emit("fetch again", { chatName, admin });
+        });
+
+    });
+
+    socket.on("fetch again rename", ({ users, chatName, userName, prevName }) => {
+        if (!users) return;
+        users.forEach(it => {
+            // if (it._id === ._id) return;
+            socket.in(it._id).emit("fetch again rename", { chatName, admin, prevName });
+        });
+
+    });
 })
+
+
+// const handler = async (event, context) => {
+//     const url = 'https://fluxchat.onrender.com/auth/login';
+
+//     return new Promise((resolve, reject) => {
+//         const req = https.get(url, (res) => {
+//             if (res.statusCode === 200) {
+//                 console.log("done");
+//                 resolve({
+//                     statusCode: 200,
+//                     body: 'Server pinged successfully',
+//                 });
+//             } else {
+//                 reject(
+//                     new Error(`Server ping failed with status code: ${res.statusCode}`)
+//                 );
+//             }
+//         });
+
+//         req.on('error', (error) => {
+//             reject(error);
+//         });
+
+//         req.end();
+//     });
+// };

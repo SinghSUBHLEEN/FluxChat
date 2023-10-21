@@ -8,11 +8,12 @@ import { BiSearch } from "react-icons/bi";
 import { getProfile, getSender, isValidChat } from './chatLogic';
 import GroupChatModal from "../GroupChatModal/GroupChatModal";
 import SkeletonCustom from '../SkeletonCustom/SkeletonCustom';
+import io from 'socket.io-client';
 
 function MyChats({ fetchAgain, setFetchAgain }) {
 
     const [loggedUser, setLoggedUser] = useState("");
-    const { selectedChat, setSelectedChat, setChats, chats } = ChatState();
+    const { selectedChat, setSelectedChat, setChats, chats, socket, socketConnected } = ChatState();
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -39,6 +40,8 @@ function MyChats({ fetchAgain, setFetchAgain }) {
         }
     }
 
+
+
     useEffect(() => {
         if (cookie.get("_id"))
             setLoggedUser(cookie.get("_id"));
@@ -46,11 +49,31 @@ function MyChats({ fetchAgain, setFetchAgain }) {
     })
 
     useEffect(() => {
-        // if (cookie.get("_id"))
-        //     setLoggedUser(cookie.get("_id").substring(3).slice(0, -1));
-        // console.log(loggedUser);
         fetchChats();
     }, [fetchAgain]);
+
+    useEffect(() => {
+        socket.on("fetch again", ({ chatName, admin }) => {
+            toast({
+                description: "You have been added to the group " + chatName + " by " + admin,
+                duration: 4000,
+                position: "bottom",
+                isClosable: true,
+                status: "info"
+            })
+            setFetchAgain(!fetchAgain);
+        })
+        socket.on("fetch again rename", ({ chatName, userName, prevName }) => {
+            toast({
+                description: userName + " updated name of " + prevName + " to " + chatName,
+                duration: 4000,
+                position: "bottom",
+                isClosable: true,
+                status: "info"
+            })
+            setFetchAgain(!fetchAgain);
+        })
+    }, []);
 
 
     return <Box
@@ -78,7 +101,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
             justifyContent="space-between"
             alignItems="center"
         ><span>Chats</span>
-            <GroupChatModal>
+            <GroupChatModal fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} socket={socket} >
                 <Tooltip label="create group" hasArrow >
                     {/* <Button
                         d="flex"
@@ -146,14 +169,13 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                                                 mr={2}
                                                 size='md'
                                                 cursor="pointer"
+                                                borderWidth="medium"
+                                                borderColor="blackAlpha.400"
                                                 src={!chat.isGroupChat ? getProfile(loggedUser, chat.users) : chat.chatName}
                                                 name={!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName}
                                             />
                                             </div>
                                             <div style={{ flex: 0.9, overflow: "hidden", display: "inline" }}>
-                                                {/* <Box display="inline" px="3" style={{ marginTop: "auto", marginBottom: "auto" }}>
-                                            
-                                        </Box> */}
                                                 <span style={{ display: "block", fontSize: "1.35rem", width: "100%" }}>
                                                     {(!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).length > 18 ? (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).slice(0, 16) + "..." : (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName)}
                                                 </span>
@@ -185,4 +207,4 @@ function MyChats({ fetchAgain, setFetchAgain }) {
     </Box >;
 }
 
-export default memo(MyChats);
+export default MyChats;

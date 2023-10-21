@@ -9,8 +9,10 @@ import SkeletonCustom from '../SkeletonCustom/SkeletonCustom';
 import { Spinner } from 'react-bootstrap';
 import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 import { MdDriveFileRenameOutline } from 'react-icons/md';
+import cookie from 'js-cookie';
+import io from 'socket.io-client';
 
-export default function GroupChatModal({ children }) {
+export default function GroupChatModal({ children, fetchAgain, setFetchAgain, }) {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [groupChatName, setGroupChatName] = useState("");
@@ -21,7 +23,7 @@ export default function GroupChatModal({ children }) {
     const [createLoading, setCreateLoading] = useState(false);
 
     const [state, setState] = useState(0);
-    const { chats, setChats } = ChatState();
+    const { chats, setChats, socket, socketConnected, } = ChatState();
     const toast = useToast();
 
     useEffect(() => {
@@ -40,7 +42,7 @@ export default function GroupChatModal({ children }) {
 
 
     const handleAdd = async (user) => {
-        if (selectedUsers.includes(user)) {
+        if (selectedUsers.filter(each => each._id === user._id).length > 0) {
             toast({
                 title: "User already present",
                 status: "warning",
@@ -122,10 +124,12 @@ export default function GroupChatModal({ children }) {
 
         try {
             setCreateLoading(true);
+
             const { data } = await axios.post("/api/chat/group", {
                 name: groupChatName,
                 users: JSON.stringify(selectedUsers.map((user) => user._id)),
             });
+            socket.emit("fetch again", { users: selectedUsers, chatName: groupChatName, admin: cookie.get("name") });
             setChats([data, ...chats]);
             onClose();
             toast({
@@ -144,6 +148,8 @@ export default function GroupChatModal({ children }) {
             onClose();
         }
     }
+
+
 
     return <>
         <span onClick={onOpen}>{children}</span>

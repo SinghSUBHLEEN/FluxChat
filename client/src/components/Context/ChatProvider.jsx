@@ -1,23 +1,28 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import cookie from "js-cookie";
+import io from "socket.io-client";
 
 const ChatContext = createContext();
 
 
 const ChatProvider = ({ children }) => {
 
+    const socket = io("http://localhost:5000");
     const [user, setUser] = useState();
     const [selectedChat, setSelectedChat] = useState();
     const [chats, setChats] = useState([]);
     const [loadingChat, setLoadingChat] = useState(false);
+    const [socketConnected, setSocketConnected] = useState(false);
 
     useEffect(() => {
-        const userInfo = cookie.get("token");
-        setUser(userInfo);
+        socket.emit("setup", cookie.get("_id"));
+        socket.on("connected", () => {
+            setSocketConnected(true);
+            console.log("connected to socket");
+        })
+    });
 
-    }, [])
-
-    return <ChatContext.Provider value={{ user, setUser, selectedChat, setSelectedChat, chats, setChats, loadingChat, setLoadingChat }}>
+    return <ChatContext.Provider value={{ user, setUser, selectedChat, setSelectedChat, chats, setChats, loadingChat, setLoadingChat, socket, socketConnected }}>
         {children}
     </ChatContext.Provider>
 }

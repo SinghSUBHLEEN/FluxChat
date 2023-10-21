@@ -138,7 +138,7 @@ router.put("/remove", async (req, res) => {
         res.status(404);
         throw new Error("Chat Not Found");
     } else {
-        res.json(removed);
+        res.status(200).json(removed);
     }
 });
 
@@ -157,12 +157,12 @@ router.put("/add", async (req, res) => {
     )
         .populate("users", "-password")
         .populate("groupAdmin", "-password");
-
+    console.log(added);
     if (!added) {
         res.status(404);
         throw new Error("Chat Not Found");
     } else {
-        res.json(added);
+        res.status(200).json(added);
     }
 });
 

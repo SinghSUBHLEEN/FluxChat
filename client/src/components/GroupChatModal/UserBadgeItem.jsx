@@ -5,7 +5,7 @@ import { AiOutlineClose } from "react-icons/ai";
 
 
 
-function UserBadgeItem({ user, onDelete }) {
+function UserBadgeItem({ user, onDelete, isAdmin }) {
 
     const arr = ["green.600", "orange.600", "blue.600", "pink.600", "yellow.600", "cyan.600", "purple.600"];
 
@@ -26,7 +26,7 @@ function UserBadgeItem({ user, onDelete }) {
             cursor="pointer"
             onClick={onDelete}
             display="inline"
-        ><span>{user.name}<AiOutlineClose style={{ display: "inline", fontSize: "1.2em" }} /></span></Box>
+        ><span>{user.name}{!isAdmin && <AiOutlineClose style={{ display: "inline", fontSize: "1.2em" }} />}</span></Box>
     </>
 }
 

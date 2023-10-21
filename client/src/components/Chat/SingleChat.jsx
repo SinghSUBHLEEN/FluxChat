@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, FormControl, IconButton, Input, Spinner, Text, useToast } from '@chakra-ui/react';
+import { Avatar, Box, Button, FormControl, IconButton, Input, InputGroup, InputLeftAddon, Spinner, Text, useToast } from '@chakra-ui/react';
 import { useEffect, useState, memo } from 'react'
 import { ChatState } from '../Context/ChatProvider';
 import { MdKeyboardBackspace } from "react-icons/md";
@@ -6,7 +6,7 @@ import MessageIcon from './MessageIconCustom';
 import { SyncLoader } from "react-spinners";
 import { getSender } from './chatLogic';
 import cookie from "js-cookie";
-import { IoSendSharp } from "react-icons/io5";
+import { PiChatsTeardropDuotone } from "react-icons/pi";
 import { AiFillEdit, AiOutlineArrowUp } from "react-icons/ai";
 import axios from 'axios';
 import ScrChat from './ScrChat';
@@ -18,8 +18,7 @@ import { CgLogOut } from "react-icons/cg";
 import { MdDelete } from "react-icons/md";
 import UpdateGroupModal from '../GroupChatModal/UpdateGroupModal';
 
-const endPt = "/";
-var socket, selectedChatCompare;
+var selectedChatCompare
 
 function SingleChat({ fetchAgain, setFetchAgain }) {
 
@@ -29,20 +28,22 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
     const [newMessage, setNewMessage] = useState("");
     const [typing, setTyping] = useState(false);
     const [istyping, setIsTyping] = useState(false);
-    const [socketConnected, setSocketConnected] = useState(false);
+    const [lockInput, setLockInput] = useState(false);
 
     const toast = useToast();
 
-    const { selectedChat, setSelectedChat, notification, setNotification } = ChatState();
+    const { selectedChat, setSelectedChat, socket, socketConnected } = ChatState();
 
     const sendMessage = async (e) => {
         e.preventDefault();
         try {
             const curr = newMessage;
             setNewMessage("");
+            setLockInput(true);
             const { data } = await axios.post("/api/message", { content: curr, chatId: selectedChat._id });
             socket.emit('new_message', data);
             setMessages([...messages, data]);
+            setLockInput(false);
 
         } catch (error) {
             toast({
@@ -53,6 +54,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                 status: "error",
                 position: "bottom"
             })
+            setLockInput(false);
         }
     }
 
@@ -81,16 +83,6 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
 
 
     const leaverGroupHandler = async () => {
-        if (selectedChat.groupAdmin[0]._id !== cookie.get("_id") && user._id !== cookie.get("_id")) {
-            toast({
-                title: "Only admin can remove members",
-                status: "warning",
-                duration: 4000,
-                position: 'bottom',
-                isClosable: true
-            })
-            return;
-        }
         try {
             const { data } = await axios.put(
                 `/api/chat/remove`,
@@ -134,21 +126,14 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
     }
 
     useEffect(() => {
-        socket = io(endPt);
-        socket.emit("setup", cookie.get("_id"))
-        socket.on("connected", () => {
-            setSocketConnected(true);
-        })
-    }, []);
-
-    useEffect(() => {
-        fetchMessages();
+        if (selectedChatCompare !== selectedChat)
+            fetchMessages();
         selectedChatCompare = selectedChat;
     }, [selectedChat]);
 
 
-
     useEffect(() => {
+
         socket.on("message_recieved", (obj) => {
             if (!selectedChatCompare || selectedChatCompare._id !== obj.chat._id) {
                 // give notification      
@@ -166,6 +151,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         socket.on("stop typing", () => {
             setIsTyping(false)
         });
+
 
     });
 
@@ -249,17 +235,31 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                         <FormControl isRequired mt={3} display="flex">
                             {/* {istyping ? <div style={{ fontSize: "10rem", color: "white" }}>Loading...</div> : <></>} */}
                             {/* {istyping && <Typing />} */}
-                            <Input
-                                borderWidth={0}
-                                bg="whiteAlpha.200"
-                                display="inline"
-                                placeholder='Type a message'
-                                value={newMessage}
-                                color="whiteAlpha.700"
-                                borderRadius="3xl"
-                                onChange={typingHandler}
-                                autoComplete='off'
-                            />
+                            <InputGroup>
+                                <InputLeftAddon
+                                    p={2}
+                                    bg="whiteAlpha.200"
+                                    color="whiteAlpha.800"
+                                    borderLeftRadius="3xl"
+                                    cursor="pointer"
+                                    width="12"
+                                    borderWidth={0}
+                                >
+                                    <PiChatsTeardropDuotone size="lg" />
+                                </InputLeftAddon>
+                                <Input
+                                    borderWidth={0}
+                                    bg="whiteAlpha.200"
+                                    display="inline"
+                                    placeholder='Type a message'
+                                    value={newMessage}
+                                    color="whiteAlpha.700"
+                                    borderRadius="3xl"
+                                    onChange={typingHandler}
+                                    autoComplete='off'
+                                    disabled={lockInput}
+                                />
+                            </InputGroup>
                             <IconButton colorScheme="red" isRound="true" fontSize="2xl" type="submit" ml={2} icon={<AiOutlineArrowUp />} onClick={sendMessage} />
                         </FormControl>
                     </form>

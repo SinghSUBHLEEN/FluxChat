@@ -13,7 +13,7 @@ import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 
 export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, fetchMessages }) {
 
-    const { selectedChat, setSelectedChat, chats, setChats } = ChatState();
+    const { selectedChat, setSelectedChat, chats, setChats, socket, socketConnected } = ChatState();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [groupChatName, setGroupChatName] = useState(selectedChat.chatName);
@@ -43,9 +43,13 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
 
         try {
             setLoadingUpdate(true);
-            const { data } = axios.put("/api/chat/add", { chatId: selectedChat._id, userId: user });
-            setSelectedChat(data);
+            const { data } = await axios.put("/api/chat/add", { chatId: selectedChat._id, userId: user });
+            // setSelectedChat(data);
+            // setSelectedUsers([data, ])
+            console.log(data);
+            setSelectedUsers([user, ...selectedUsers]);
             setFetchAgain(!fetchAgain);
+            // fetchMessages();
             setLoadingUpdate(false);
         } catch (error) {
             toast({
@@ -93,7 +97,7 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
             user._id === cookie.get("_id") ? setSelectedChat() : setSelectedChat(data);
             setFetchAgain(!fetchAgain);
             fetchMessages();
-            setLoading(false);
+            setLoadingUpdate(false);
         } catch (error) {
             toast({
                 title: "Error Occured!",
@@ -146,6 +150,7 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
         try {
             setUpdateLoading(true);
             const { data } = await axios.put("/api/chat/rename", { chatId: selectedChat._id, chatName: groupChatName });
+            socket.emit("fetch again rename", { chatName: groupChatName, userName: cookie.get("name"), prevName: selectedChat.chatName, user: selectedChat.users });
             setUpdateLoading(false);
             setSelectedChat(data);
             setFetchAgain(!fetchAgain);
@@ -175,6 +180,7 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
     }, [selectedChat]);
 
     useEffect(() => {
+
         return () => {
             setSearch("");
             setSearchResult([]);
@@ -194,9 +200,18 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
                 <ModalHeader fontSize="27px"><span>Update Group</span></ModalHeader>
                 <ModalCloseButton />
                 <ModalBody d="flex" flexDir='column' alignItems="center">
+                    {selectedChat.groupAdmin.length > 0 &&
+                        (<>
+                            <Text display="inline" fontSize="lg">
+                                Admins:
+                            </Text>
+                            <Box display="flex" flexWrap="wrap" mb={1}>
+                                {selectedChat.groupAdmin.map(user => <UserBadgeItem user={user} key={user._id} isAdmin={true} />)}
+                            </Box>
+                        </>)}
                     {selectedUsers.length > 0 &&
                         (<>
-                            <Text display="block" fontSize="lg">
+                            <Text display="inline" fontSize="lg" mb={1}>
                                 Members:
                             </Text>
                             <Box display="flex" flexWrap="wrap" mb={5}>
