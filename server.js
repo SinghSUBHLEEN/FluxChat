@@ -103,28 +103,28 @@ io.on("connection", socket => {
 })
 
 
-// const handler = async (event, context) => {
-//     const url = 'https://fluxchat.onrender.com/auth/login';
+const handler = async (event, context) => {
+    const url = 'https://fluxchat.onrender.com/auth/login';
 
-//     return new Promise((resolve, reject) => {
-//         const req = https.get(url, (res) => {
-//             if (res.statusCode === 200) {
-//                 console.log("done");
-//                 resolve({
-//                     statusCode: 200,
-//                     body: 'Server pinged successfully',
-//                 });
-//             } else {
-//                 reject(
-//                     new Error(`Server ping failed with status code: ${res.statusCode}`)
-//                 );
-//             }
-//         });
+    return new Promise((resolve, reject) => {
+        const req = https.get(url, (res) => {
+            if (res.statusCode === 200) {
+                console.log("done");
+                resolve({
+                    statusCode: 200,
+                    body: 'Server pinged successfully',
+                });
+            } else {
+                reject(
+                    new Error(`Server ping failed with status code: ${res.statusCode}`)
+                );
+            }
+        });
 
-//         req.on('error', (error) => {
-//             reject(error);
-//         });
+        req.on('error', (error) => {
+            reject(error);
+        });
 
-//         req.end();
-//     });
-// };
+        req.end();
+    });
+};
