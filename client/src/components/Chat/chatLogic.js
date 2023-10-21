@@ -1,15 +1,17 @@
 
 export const getSender = (loggedUser, users) => {
-    // console.log(typeof (users[0]._id));
+    // if (!users || users.length <= 1) return "none";
     return (users[0]._id == loggedUser ? users[1].name : users[0].name);
 }
 
 export const getProfile = (loggedUser, users) => {
+    // if (!users || users.length <= 1) return "none";
     return (users[0]._id === loggedUser ? users[1].profile : users[0].profile);
 }
 
 
 export const isValidChat = (search, chat) => {
+    if (chat.users.length <= 1) return true;
     if (!search) return false;
     if (chat.isGroupChat) {
         if (!chat.chatName.toLowerCase().includes(search.toLowerCase())) {

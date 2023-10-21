@@ -11,10 +11,10 @@ import { Spinner } from 'react-bootstrap';
 import OverlaySpinner from "../OverlaySpinner/OverlaySpinner";
 import { AiOutlineUsergroupAdd } from 'react-icons/ai';
 
+
 export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, fetchMessages }) {
 
-    const { selectedChat, setSelectedChat, chats, setChats, socket, socketConnected } = ChatState();
-
+    const { selectedChat, setSelectedChat, chats, setChats, socket, socketConnected, setLoadingChat } = ChatState();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [groupChatName, setGroupChatName] = useState(selectedChat.chatName);
     const [selectedUsers, setSelectedUsers] = useState(selectedChat.users);
@@ -23,9 +23,6 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
     const [loading, setLoading] = useState(false);
     const [nameLock, setNameLock] = useState(true);
     const [updateLoading, setUpdateLoading] = useState(false);
-    const [addedUsers, setAddedUsers] = useState([]);
-    const [removedUsers, setRemovedUsers] = useState([]);
-    const [loadingUpdate, setLoadingUpdate] = useState(false);
 
     const toast = useToast();
 
@@ -42,15 +39,12 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
         }
 
         try {
-            setLoadingUpdate(true);
+            setLoadingChat(true);
             const { data } = await axios.put("/api/chat/add", { chatId: selectedChat._id, userId: user });
-            // setSelectedChat(data);
-            // setSelectedUsers([data, ])
-            console.log(data);
+            socket.emit("members updated", { chatName: selectedChat.chatName, adminName: selectedChat.groupAdmin[0].name, users: selectedChat.users, curr: cookie.get("_id") });
             setSelectedUsers([user, ...selectedUsers]);
             setFetchAgain(!fetchAgain);
-            // fetchMessages();
-            setLoadingUpdate(false);
+            setLoadingChat(false);
         } catch (error) {
             toast({
                 title: error.message,
@@ -59,10 +53,9 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
                 isClosable: true,
                 status: "error"
             })
+            setLoadingChat(false);
         }
     }
-
-
 
     const handleRemove = async (user) => {
         if (selectedChat.groupAdmin[0]._id !== cookie.get("_id") && user._id !== cookie.get("_id")) {
@@ -86,7 +79,7 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
             return;
         }
         try {
-            setLoadingUpdate(true);
+            setLoadingChat(true);
             const { data } = await axios.put(
                 `/api/chat/remove`,
                 {
@@ -94,10 +87,11 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
                     userId: user._id,
                 }
             );
+            socket.emit("members updated", { chatName: selectedChat.chatName, adminName: selectedChat.groupAdmin[0].name, users: selectedChat.users, curr: cookie.get("_id") });
             user._id === cookie.get("_id") ? setSelectedChat() : setSelectedChat(data);
             setFetchAgain(!fetchAgain);
             fetchMessages();
-            setLoadingUpdate(false);
+            setLoadingChat(false);
         } catch (error) {
             toast({
                 title: "Error Occured!",
@@ -107,7 +101,7 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
                 isClosable: true,
                 position: "bottom",
             });
-            setLoadingUpdate(false);
+            setLoadingChat(false);
         }
     }
 
@@ -148,13 +142,15 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
     const handleRename = async () => {
         if (nameLock) return;
         try {
-            setUpdateLoading(true);
+            setLoadingChat(true);
+            const prev = selectedChat.chatName;
+            console.log(prev);
             const { data } = await axios.put("/api/chat/rename", { chatId: selectedChat._id, chatName: groupChatName });
-            socket.emit("fetch again rename", { chatName: groupChatName, userName: cookie.get("name"), prevName: selectedChat.chatName, user: selectedChat.users });
+            socket.emit("fetch again rename", { users: selectedChat.users, chatName: groupChatName, userName: cookie.get("name"), prevName: prev, curr: cookie.get("_id"), chatId: selectedChat._id });
             setUpdateLoading(false);
             setSelectedChat(data);
             setFetchAgain(!fetchAgain);
-            setUpdateLoading(false);
+            setLoadingChat(false);
         } catch (error) {
             console.log(error);
             toast({
@@ -165,7 +161,7 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
                 isClosable: true,
                 position: "bottom"
             });
-            setUpdateLoading(false);
+            setLoadingChat(false);
         }
         setNameLock(true);
     }

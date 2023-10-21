@@ -32,7 +32,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
 
     const toast = useToast();
 
-    const { selectedChat, setSelectedChat, socket, socketConnected } = ChatState();
+    const { selectedChat, setSelectedChat, socket, socketConnected, chats, setChats } = ChatState();
 
     const sendMessage = async (e) => {
         e.preventDefault();
@@ -125,6 +125,23 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         }, len)
     }
 
+    const fetchChats = async () => {
+        try {
+            const { data } = await axios.get("/api/chat");
+            setChats(data);
+        } catch (error) {
+            console.log(error);
+            toast({
+                title: "Error Occured!",
+                description: "Failed to fetch the chats",
+                status: "error",
+                duration: 4000,
+                isClosable: true,
+                position: "bottom-left"
+            })
+        }
+    }
+
     useEffect(() => {
         if (selectedChatCompare !== selectedChat)
             fetchMessages();
@@ -153,7 +170,9 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         });
 
 
-    });
+
+
+    }, []);
 
 
     return <>
@@ -260,7 +279,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                                     disabled={lockInput}
                                 />
                             </InputGroup>
-                            <IconButton colorScheme="red" isRound="true" fontSize="2xl" type="submit" ml={2} icon={<AiOutlineArrowUp />} onClick={sendMessage} />
+                            <IconButton colorScheme="red" isRound="true" fontSize="2xl" type="submit" ml={2} disabled={lockInput} icon={<AiOutlineArrowUp />} onClick={sendMessage} />
                         </FormControl>
                     </form>
                 </Box>

@@ -92,19 +92,33 @@ io.on("connection", socket => {
 
     });
 
-    socket.on("fetch again rename", ({ users, chatName, userName, prevName }) => {
+    socket.on("fetch again rename", ({ users, chatName, userName, prevName, curr, chatId }) => {
         if (!users) return;
         users.forEach(it => {
-            // if (it._id === ._id) return;
-            socket.in(it._id).emit("fetch again rename", { chatName, admin, prevName });
+            if (it._id !== curr) socket.in(it._id).emit("fetch again rename", { chatName, userName, prevName, curr, chatId });
         });
 
     });
+
+    let willEmit = true;
+
+    socket.on("members updated", ({ chatName, users, curr, adminName }) => {
+        if (willEmit) {
+            if (!users) return;
+            users.forEach(it => {
+                if (it._id !== curr) socket.in(it._id).emit("members updated", { chatName, adminName });
+            });
+            setTimeout(() => {
+                willEmit = false;
+            }, 30000);
+        }
+    })
+
 })
 
 
 const handler = async (event, context) => {
-    const url = 'https://fluxchat.onrender.com/auth/login';
+    const url = 'https://fluxchat.onrender.com/';
 
     return new Promise((resolve, reject) => {
         const req = https.get(url, (res) => {
@@ -128,3 +142,5 @@ const handler = async (event, context) => {
         req.end();
     });
 };
+
+handler();

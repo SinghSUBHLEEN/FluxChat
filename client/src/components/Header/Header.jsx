@@ -246,38 +246,40 @@ function Header() {
                         {cook && <Container fluid className="p-0 mx-2" style={{ flex: 0.9 }}>
 
                             <Tooltip label="Search users by name or email" hasArrow>
-                                <InputGroup
-                                    width="fit-content"
-                                    onClick={onOpen}
-                                    // display="block"
-                                    mx={"auto"}
-                                >
-                                    <InputLeftAddon
-                                        p={2}
+                                <form className="m-0 p-0">
+                                    <InputGroup
+                                        width="fit-content"
                                         onClick={onOpen}
-                                        bg="whiteAlpha.300"
-                                        color="whiteAlpha.800"
-                                        borderLeftRadius="3xl"
-                                        cursor="pointer"
-                                        width="12"
-                                        borderColor="gray"
-                                        borderWidth={0}
+                                        // display="block"
+                                        mx={"auto"}
                                     >
-                                        <BiSearch size="lg" />
-                                    </InputLeftAddon>
-                                    <Input type='text' borderColor="gray" borderRadius="3xl" bg="whiteAlpha.300" placeholder="Search users" _placeholder={{ color: "whiteAlpha.800" }} borderWidth={0} />
-                                    {/* <InputLeftElement onClick={onOpen}>
+                                        <InputLeftAddon
+                                            p={2}
+                                            onClick={onOpen}
+                                            bg="whiteAlpha.300"
+                                            color="whiteAlpha.800"
+                                            borderLeftRadius="3xl"
+                                            cursor="pointer"
+                                            width="12"
+                                            borderColor="gray"
+                                            borderWidth={0}
+                                        >
+                                            <BiSearch size="lg" />
+                                        </InputLeftAddon>
+                                        <Input type='text' borderColor="gray" borderRadius="3xl" bg="whiteAlpha.300" placeholder="Search users" _placeholder={{ color: "whiteAlpha.800" }} borderWidth={0} />
+                                        {/* <InputLeftElement onClick={onOpen}>
                                         <Button style={{ backgroundColor: "inherit", fontSize: "large" }}>
                                             <span><BiSearchAlt style={{ fontSize: "1.6rem", color: "gray" }} /></span>
                                         </Button>
                                     </InputLeftElement> */}
 
-                                    {/* <InputRightElement onClick={onOpen}>
+                                        {/* <InputRightElement onClick={onOpen}>
                                             <Button style={{ backgroundColor: "inherit", paddingRight: "1rem", wdith: "fit-content", marginRight: "6.4rem", color: "gray" }}>
                                                 {"........"}
                                             </Button>
                                         </InputRightElement> */}
-                                </InputGroup>
+                                    </InputGroup>
+                                </form>
                             </Tooltip>
 
                         </Container>}

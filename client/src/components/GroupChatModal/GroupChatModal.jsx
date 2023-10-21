@@ -228,6 +228,7 @@ export default function GroupChatModal({ children, fetchAgain, setFetchAgain, })
                             <Spinner color='white' size='sm'></Spinner></Button>
                     }
                     <Button variant="solid" colorScheme="whiteAlpha" onClick={reset}>Cancel</Button>
+
                 </ModalFooter>
             </ModalContent>
         </Modal >

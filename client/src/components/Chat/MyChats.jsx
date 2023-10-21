@@ -55,7 +55,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
     useEffect(() => {
         socket.on("fetch again", ({ chatName, admin }) => {
             toast({
-                description: "You have been added to the group " + chatName + " by " + admin,
+                description: "You have been added to " + chatName + " by " + admin,
                 duration: 4000,
                 position: "bottom",
                 isClosable: true,
@@ -63,18 +63,20 @@ function MyChats({ fetchAgain, setFetchAgain }) {
             })
             setFetchAgain(!fetchAgain);
         })
-        socket.on("fetch again rename", ({ chatName, userName, prevName }) => {
-            toast({
-                description: userName + " updated name of " + prevName + " to " + chatName,
-                duration: 4000,
-                position: "bottom",
-                isClosable: true,
-                status: "info"
-            })
-            setFetchAgain(!fetchAgain);
-        })
-    }, []);
 
+        // socket.on("fetch again rename", ({ chatName, userName, prevName }) => {
+        //     setFetchAgain(!fetchAgain);
+        //     fetchChats();
+        //     // toast({
+        //     //     description: userName + " updated name of " + prevName + " to " + chatName,
+        //     //     duration: 4000,
+        //     //     position: "bottom",
+        //     //     isClosable: true,
+        //     //     status: "info"
+        //     // })
+        // })
+
+    }, []);
 
     return <Box
         display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
@@ -149,44 +151,42 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                             if (isValidChat(search, chat))
                                 return <></>
                             else
-                                return <>
-                                    <Box
-                                        onClick={() => setSelectedChat(chat)}
-                                        cursor="pointer"
-                                        overflowY="hidden"
-                                        d="flex"
-                                        bg={selectedChat === chat ? "rgba(99,179,237, 0.7)" : "whiteAlpha.100"}
-                                        w="100%"
-                                        px={3}
-                                        py={2}
-                                        borderRadius="lg"
-                                        key={chat._id}
-                                        borderWidth="thin"
-                                        borderColor="whiteAlpha.600"
-                                    >
-                                        <div className='d-flex'>
-                                            <div style={{ flex: 0.1, paddingTop: "auto", paddingBottom: "auto" }}><Avatar
-                                                mr={2}
-                                                size='md'
-                                                cursor="pointer"
-                                                borderWidth="medium"
-                                                borderColor="blackAlpha.400"
-                                                src={!chat.isGroupChat ? getProfile(loggedUser, chat.users) : chat.chatName}
-                                                name={!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName}
-                                            />
-                                            </div>
-                                            <div style={{ flex: 0.9, overflow: "hidden", display: "inline" }}>
-                                                <span style={{ display: "block", fontSize: "1.35rem", width: "100%" }}>
-                                                    {(!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).length > 18 ? (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).slice(0, 16) + "..." : (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName)}
-                                                </span>
-                                                <span style={{ display: "block", fontSize: "medium" }}>{chat && chat.latestMessage ? chat.latestMessage.content : ""}</span>
-                                            </div>
+                                return <Box
+                                    onClick={() => setSelectedChat(chat)}
+                                    cursor="pointer"
+                                    overflowY="hidden"
+                                    d="flex"
+                                    bg={selectedChat === chat ? "rgba(99,179,237, 0.7)" : "whiteAlpha.100"}
+                                    w="100%"
+                                    px={3}
+                                    py={2}
+                                    borderRadius="lg"
+                                    key={chat._id}
+                                    borderWidth="thin"
+                                    borderColor="whiteAlpha.600"
+                                >
+                                    <div className='d-flex'>
+                                        <div style={{ flex: 0.1, paddingTop: "auto", paddingBottom: "auto" }}><Avatar
+                                            mr={2}
+                                            size='md'
+                                            cursor="pointer"
+                                            borderWidth="medium"
+                                            borderColor="blackAlpha.400"
+                                            src={!chat.isGroupChat ? getProfile(loggedUser, chat.users) : chat.chatName}
+                                            name={!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName}
+                                        />
                                         </div>
-                                        {/* <Text>
+                                        <div style={{ flex: 0.9, overflow: "hidden", display: "inline" }}>
+                                            <span style={{ display: "block", fontSize: "1.35rem", width: "100%" }}>
+                                                {(!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).length > 18 ? (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).slice(0, 16) + "..." : (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName)}
+                                            </span>
+                                            <span style={{ display: "block", fontSize: "medium" }}>{chat && chat.latestMessage ? chat.latestMessage.content : ""}</span>
+                                        </div>
+                                    </div>
+                                    {/* <Text>
                                     {!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName}
                                 </Text> */}
-                                    </Box>
-                                </>
+                                </Box>
                         })}
                     </Stack>
                 </> :
