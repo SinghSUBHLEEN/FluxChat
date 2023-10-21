@@ -172,7 +172,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
 
 
 
-    }, []);
+    });
 
 
     return <>
@@ -271,7 +271,6 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                                     bg="whiteAlpha.200"
                                     display="inline"
                                     placeholder='Type a message'
-                                    value={newMessage}
                                     color="whiteAlpha.700"
                                     borderRadius="3xl"
                                     onChange={typingHandler}
