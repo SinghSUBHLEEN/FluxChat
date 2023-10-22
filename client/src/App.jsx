@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import cookie from "js-cookie";
 import { ModalCloseButton, ModalContent, ModalOverlay, useDisclosure, Button, Container, Modal, ModalBody, ModalHeader, Spinner } from '@chakra-ui/react';
 import { SyncLoader } from 'react-spinners';
+import NotFound from './components/NotFound/NotFound';
+import Footer from './components/Footer/Footer';
 
 
 function Home() {
@@ -43,11 +45,14 @@ function App() {
     <div className='App'>
 
       <Routes>
-        <Route path="/" Component={Chat} />
+        <Route path="*" Component={NotFound} />
         <Route path="/chat" Component={Chat} />
+        <Route path="/" Component={Chat} />
+        <Route path="/home" Component={Chat} />
         <Route path="/auth/login" Component={Login} />
         <Route path='/auth/register' Component={Register} />
       </Routes>
+      <Footer />
     </div>
   )
 }

@@ -14,16 +14,23 @@ function Chat() {
 
     const navigate = useNavigate();
     const [fetchAgain, setFetchAgain] = useState(false);
-    const { loadingChat, setLoadingChat, socket, setChats, chats, setSelectedChat } = ChatState();
+    const { loadingChat, socket, setChats, setSelectedChat, selectedChat } = ChatState();
     const toast = useToast();
 
     const fetchChats = async (chatId) => {
         try {
             const { data } = await axios.get("/api/chat");
             setChats(data);
-            data.forEach(chat => {
-                if (chat._id === chatId) setSelectedChat(chat);
-            });
+            console.log(selectedChat);
+            if (selectedChat && selectedChat._id === chatId) {
+                console.log(selectedChat._id, chatId);
+                data.forEach(chat => {
+                    if (chat._id === chatId) {
+                        setSelectedChat(chat);
+                    }
+                });
+            }
+
             // console.log(data);
         } catch (error) {
             console.log(error);
@@ -43,19 +50,17 @@ function Chat() {
     }, []);
 
     useEffect(() => {
-        socket.on("fetch again rename", ({ chatName, userName, prevName, curr, chatId }) => {
+        socket.on("fetch again rename", ({ chatName, userName, prevName, chatId }) => {
             // setFetchAgain(!fetchAgain);
             fetchChats(chatId);
-            if (curr !== cookie.get("_id"))
-                return toast({
-                    description: userName + " updated name of " + prevName + " to " + chatName,
-                    duration: 4000,
-                    position: "bottom",
-                    isClosable: true,
-                    status: "info"
-                });
+            toast({
+                description: userName + " updated name of " + prevName + " to " + chatName,
+                duration: 4000,
+                position: "bottom",
+                isClosable: true,
+                status: "info"
+            });
         })
-
         socket.on("members updated", ({ chatName, adminName }) => {
             toast({
                 description: adminName + " updated members of " + chatName,
@@ -64,6 +69,11 @@ function Chat() {
                 isClosable: true,
                 status: "info"
             });
+        })
+
+        socket.on("fetch again chat", ({ id }) => {
+            if (cookie.get("_id") === id) return;
+            fetchChats();
         })
 
     }, [])

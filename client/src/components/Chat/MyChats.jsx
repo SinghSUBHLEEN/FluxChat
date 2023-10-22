@@ -13,18 +13,36 @@ import io from 'socket.io-client';
 function MyChats({ fetchAgain, setFetchAgain }) {
 
     const [loggedUser, setLoggedUser] = useState("");
-    const { selectedChat, setSelectedChat, setChats, chats, socket, socketConnected } = ChatState();
+    const { selectedChat, setSelectedChat, setChats, chats, socket, socketConnected, notification, setNotification } = ChatState();
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
 
     const toast = useToast();
 
-    const fetchChats = async () => {
+    const fetchChats1 = async () => {
         try {
-            setLoading(true);
             const { data } = await axios.get("/api/chat");
-            setLoading(false);
             setChats(data);
+            // console.log(data);
+        } catch (error) {
+            console.log(error);
+            toast({
+                title: "Error Occured!",
+                description: "Failed to fetch the chats",
+                status: "error",
+                duration: 4000,
+                isClosable: true,
+                position: "bottom-left"
+            })
+        }
+    }
+
+    const fetchChats2 = async () => {
+        try {
+            if (!chats) setLoading(true);
+            const { data } = await axios.get("/api/chat");
+            setChats(data);
+            setLoading(false);
             // console.log(data);
         } catch (error) {
             console.log(error);
@@ -41,7 +59,6 @@ function MyChats({ fetchAgain, setFetchAgain }) {
     }
 
 
-
     useEffect(() => {
         if (cookie.get("_id"))
             setLoggedUser(cookie.get("_id"));
@@ -49,7 +66,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
     })
 
     useEffect(() => {
-        fetchChats();
+        fetchChats2();
     }, [fetchAgain]);
 
     useEffect(() => {
@@ -61,7 +78,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                 isClosable: true,
                 status: "info"
             })
-            setFetchAgain(!fetchAgain);
+            fetchChats1();
         })
 
         // socket.on("fetch again rename", ({ chatName, userName, prevName }) => {
@@ -77,6 +94,12 @@ function MyChats({ fetchAgain, setFetchAgain }) {
         // })
 
     }, []);
+
+    const selectingChat = (chat) => {
+        if (notification.filter(it => it.chat._id === chat._id).length > 0)
+            setNotification(notification.filter(it => it.chat._id !== chat._id));
+        setSelectedChat(chat);
+    }
 
     return <Box
         display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
@@ -152,7 +175,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                                 return <></>
                             else
                                 return <Box
-                                    onClick={() => setSelectedChat(chat)}
+                                    onClick={() => selectingChat(chat)}
                                     cursor="pointer"
                                     overflowY="hidden"
                                     d="flex"

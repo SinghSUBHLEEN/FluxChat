@@ -18,7 +18,8 @@ import { CgLogOut } from "react-icons/cg";
 import { MdDelete } from "react-icons/md";
 import UpdateGroupModal from '../GroupChatModal/UpdateGroupModal';
 
-var selectedChatCompare
+
+var selectedChatCompare;
 
 function SingleChat({ fetchAgain, setFetchAgain }) {
 
@@ -32,10 +33,11 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
 
     const toast = useToast();
 
-    const { selectedChat, setSelectedChat, socket, socketConnected, chats, setChats } = ChatState();
+    const { selectedChat, setSelectedChat, socket, socketConnected, chats, setChats, notification, setNotification } = ChatState();
 
     const sendMessage = async (e) => {
         e.preventDefault();
+        if (!newMessage || !selectedChat) return;
         try {
             const curr = newMessage;
             setNewMessage("");
@@ -43,6 +45,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
             const { data } = await axios.post("/api/message", { content: curr, chatId: selectedChat._id });
             socket.emit('new_message', data);
             setMessages([...messages, data]);
+            setChats([selectedChat, ...chats.filter(chat => chat._id !== selectedChat._id)]);
             setLockInput(false);
 
         } catch (error) {
@@ -107,11 +110,12 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
     }
 
     const typingHandler = (e) => {
-        if (!socketConnected) return;
         setNewMessage(e.target.value);
+        if (!socketConnected) return;
         if (!typing) {
             setTyping(true);
-            socket.emit('typing', selectedChat._id);
+            socket.emit('typing', { users: selectedChat.users, curr: cookie.get("_id") });
+            // socket.emit('typing', selectedChat._id);
         }
         let lastTypingTime = new Date().getTime();
         const len = 3000;
@@ -125,26 +129,27 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         }, len)
     }
 
-    const fetchChats = async () => {
-        try {
-            const { data } = await axios.get("/api/chat");
-            setChats(data);
-        } catch (error) {
-            console.log(error);
-            toast({
-                title: "Error Occured!",
-                description: "Failed to fetch the chats",
-                status: "error",
-                duration: 4000,
-                isClosable: true,
-                position: "bottom-left"
-            })
-        }
-    }
+    // const fetchChats = async () => {
+    //     try {
+    //         const { data } = await axios.get("/api/chat");
+    //         setChats(data);
+    //     } catch (error) {
+    //         console.log(error);
+    //         toast({
+    //             title: "Error Occured!",
+    //             description: "Failed to fetch the chats",
+    //             status: "error",
+    //             duration: 4000,
+    //             isClosable: true,
+    //             position: "bottom-left"
+    //         })
+    //     }
+    // }
 
     useEffect(() => {
         if (selectedChatCompare !== selectedChat)
             fetchMessages();
+        console.log(selectedChat);
         selectedChatCompare = selectedChat;
     }, [selectedChat]);
 
@@ -152,8 +157,21 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
     useEffect(() => {
 
         socket.on("message_recieved", (obj) => {
+            console.log(obj);
             if (!selectedChatCompare || selectedChatCompare._id !== obj.chat._id) {
-                // give notification      
+                // give notification    
+                setChats([...chats.filter(chat => chat._id === obj.chat._id), ...chats.filter(chat => chat._id !== obj.chat._id)])
+
+                if (notification.filter(it => obj.chat._id === it.chat._id).length === 0) {
+                    setNotification([obj, ...notification]);
+                    setFetchAgain(!fetchAgain);
+                }
+                else {
+                    setNotification([obj, ...notification.filter(it => obj.chat._id !== it.chat._id)]);
+                    setFetchAgain(!fetchAgain);
+                }
+
+
 
             } else {
                 setMessages([...messages, obj]);
@@ -168,9 +186,6 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         socket.on("stop typing", () => {
             setIsTyping(false)
         });
-
-
-
 
     });
 
@@ -276,6 +291,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                                     onChange={typingHandler}
                                     autoComplete='off'
                                     disabled={lockInput}
+                                    value={newMessage}
                                 />
                             </InputGroup>
                             <IconButton colorScheme="red" isRound="true" fontSize="2xl" type="submit" ml={2} disabled={lockInput} icon={<AiOutlineArrowUp />} onClick={sendMessage} />

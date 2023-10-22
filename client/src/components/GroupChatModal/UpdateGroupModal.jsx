@@ -144,7 +144,6 @@ export default function UpdateGroupModal({ children, fetchAgain, setFetchAgain, 
         try {
             setLoadingChat(true);
             const prev = selectedChat.chatName;
-            console.log(prev);
             const { data } = await axios.put("/api/chat/rename", { chatId: selectedChat._id, chatName: groupChatName });
             socket.emit("fetch again rename", { users: selectedChat.users, chatName: groupChatName, userName: cookie.get("name"), prevName: prev, curr: cookie.get("_id"), chatId: selectedChat._id });
             setUpdateLoading(false);

@@ -5,7 +5,7 @@ import { IoSearch } from "react-icons/io5";
 import { FaUserLarge } from "react-icons/fa6";
 import { BiSearch, BiSearchAlt, BiSolidPencil } from "react-icons/bi";
 import { Drawer, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, useToast, DrawerFooter, Avatar, Tooltip, Button, Input, FormControl, InputLeftElement, InputGroup, InputRightElement, DrawerOverlay, DrawerCloseButton, Box, Stack, Skeleton, Spinner, ModalOverlay, ModalContent, Menu, MenuButton, MenuList, MenuItem, IconButton, InputLeftAddon } from "@chakra-ui/react";
-import { Navbar, Container, Form, NavDropdown, Modal, Dropdown, DropdownButton, Nav } from "react-bootstrap";
+import { Navbar, Container, Form, NavDropdown, Modal, Dropdown, DropdownButton, Nav, DropdownItem } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import IMAGES from "../../images/Images";
 import cookie from "js-cookie";
@@ -16,6 +16,9 @@ import { ChatState } from "../Context/ChatProvider";
 import SkeletonCustom from "../SkeletonCustom/SkeletonCustom";
 import { AiOutlineMenu } from "react-icons/ai";
 import UserModal from "./UserModal";
+import { RiChat1Fill } from "react-icons/ri";
+import { getSender } from "../Chat/chatLogic";
+import { MDBBadge, MDBIcon } from 'mdb-react-ui-kit';
 
 function Header() {
 
@@ -28,7 +31,7 @@ function Header() {
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
     const [searchResult, setSearchResult] = useState([]);
-    const { selectedChat, setSelectedChat, setChats, chats, loadingChat, setLoadingChat } = ChatState();
+    const { setSelectedChat, setChats, chats, setLoadingChat, socket, notification, setNotification } = ChatState();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const navigate = useNavigate();
@@ -74,6 +77,7 @@ function Header() {
             const s = await axios.get(`/api/search/${search}`);
             setLoading(false);
             setSearchResult(s.data);
+            // socket.emit("fetch again", )
             if (s.data.length === 0) {
                 toast({
                     title: "No such user",
@@ -102,8 +106,10 @@ function Header() {
         try {
             setLoadingChat(true);
             const { data } = await axios.post("/api/chat", { userId });
-            if (!chats.find((it) => it._id === data._id))
+            if (!chats.find((it) => it._id === data._id)) {
+                socket.emit("fetch again chat", { users: data.users, id: cookie.get("_id") });
                 setChats([data, ...chats]);
+            }
             setSelectedChat(data);
             setLoadingChat(false);
             setSearchResult([]);
@@ -131,7 +137,7 @@ function Header() {
 
     return (
         <>
-            <Navbar collapseOnSelect sticky="top" expand="sm" className="color-nav">
+            <Navbar collapseOnSelect sticky="top" expand="sm" className="color-nav mb-1" >
 
                 <Container fluid className="Inner" style={{ display: "flex" }}>
                     {/* <Navbar.Toggle aria-controls="responsive-navbar-nav"><span><AiOutlineMenu color="white" /></span></Navbar.Toggle> */}
@@ -228,7 +234,7 @@ function Header() {
                             </DrawerFooter>
                         </DrawerContent>
                     </Drawer>
-                    <div style={{ float: "left", marginLeft: '12px', fontWeight: "630", marginTop: "8px" }}>
+                    <div style={{ float: "left", marginLeft: '18px', fontWeight: "630", marginTop: "8px" }}>
                         {/* <div onClick={onOpen} style={{ fontSize: "x-large", marginTop: "0.42rem", paddingRight: "0.7rem" }} className="menuIcon">
                             <AiOutlineMenu variant="primary" />
                         </div> */}
@@ -283,8 +289,41 @@ function Header() {
                             </Tooltip>
 
                         </Container>}
-                        {cook && <div style={{ flex: 0.1, display: "block" }}><NavDropdown title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />  </>} id="collapsible-nav-dropdown" style={{
-                            marginRight: "3rem",
+                        {cook && <NavDropdown align={"end"} title={(<>
+                            <Tooltip label="Notifications" hasArrow>
+                                <Button
+                                    borderRadius="full"
+                                    variant="outline" size='md'
+                                    color="white"
+                                    borderWidth="0"
+                                    _hover={{ bg: "whiteAlpha.200" }}
+                                    className="icon-button"
+                                ><RiChat1Fill fontSize="25px" />
+                                    <span className="icon-button_badge">{notification.length}</span></Button>
+                            </Tooltip>
+                        </>)} id="collapsible-nav-dropdown" style={{
+                            // width: "7rem",
+                            boxShadow: "none",
+                            fontSize: "22px"
+                        }} className="dropDown" >
+                            {!notification.length ? <><Dropdown.Item style={{ color: "white", fontSize: "15px" }}
+                                className="m-0">
+                                No Notifications
+                            </Dropdown.Item></> : <>
+                                {notification.map(it => (
+                                    <Dropdown.Item
+                                        key={it._id}
+                                        style={{ color: "white", fontSize: "15px" }}
+                                        className="m-0"
+                                        onClick={() => {
+                                            setSelectedChat(it.chat);
+                                            setNotification(notification.filter(c => c !== it));
+                                        }}
+                                    >{it.chat.isGroupChat ? ("New Messages in " + it.chat.chatName) : ("New messages from " + getSender(cookie.get("_id"), it.chat.users))}</Dropdown.Item>))}
+                            </>}
+                        </NavDropdown>}
+
+                        {cook && <div style={{ flex: 0.1, display: "block" }}><NavDropdown align={"end"} title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />  </>} id="collapsible-nav-dropdown" style={{
                             // width: "7rem",
                             boxShadow: "none",
                             padding: "0"

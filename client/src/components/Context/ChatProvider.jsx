@@ -13,6 +13,7 @@ const ChatProvider = ({ children }) => {
     const [chats, setChats] = useState([]);
     const [loadingChat, setLoadingChat] = useState(false);
     const [socketConnected, setSocketConnected] = useState(false);
+    const [notification, setNotification] = useState([]);
 
     useEffect(() => {
         socket.emit("setup", cookie.get("_id"));
@@ -22,7 +23,7 @@ const ChatProvider = ({ children }) => {
         })
     });
 
-    return <ChatContext.Provider value={{ user, setUser, selectedChat, setSelectedChat, chats, setChats, loadingChat, setLoadingChat, socket, socketConnected }}>
+    return <ChatContext.Provider value={{ user, setUser, selectedChat, setSelectedChat, chats, setChats, loadingChat, setLoadingChat, socket, socketConnected, notification, setNotification }}>
         {children}
     </ChatContext.Provider>
 }

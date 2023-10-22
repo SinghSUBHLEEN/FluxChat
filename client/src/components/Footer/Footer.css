@@ -1,0 +1,66 @@
+.c {
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+footer {
+    margin-top: auto;
+}
+
+.h {
+    font-size: medium;
+    text-align: center;
+}
+
+.break {
+    margin: auto;
+    width: 50rem;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    border-top: 0.1rem dotted white;
+    /* border: 0.02rem disc white; */
+}
+
+.end {
+    height: 1rem;
+}
+
+.custom-footer {
+    margin-top: 3.4rem;
+    margin-bottom: 0%;
+    padding-bottom: 0%;
+    border-bottom: 0%;
+}
+
+
+.bottom {
+    margin-bottom: 0%;
+    padding-bottom: 0%;
+    border-bottom: 0%;
+}
+
+.mail {
+    margin-right: 0.4rem;
+}
+
+.git-icon {
+    border-radius: 80%;
+    padding: 0.75rem;
+    padding-top: 0.55rem;
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+}
+
+.git-icon:hover {
+    background-color: #1b1b1b;
+}
+
+.git-link {
+    text-decoration: none;
+}
+
+.git-link:hover {
+    text-decoration: none;
+    color: inherit;
+}

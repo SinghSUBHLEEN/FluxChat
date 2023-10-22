@@ -81,7 +81,12 @@ io.on("connection", socket => {
 
     })
 
-    socket.on("typing", (room) => socket.in(room).emit("typing"));
+    socket.on("typing", ({ users, curr }) => {
+        if (!users) return;
+        users.forEach(it => {
+            if (it._id !== curr) socket.in(it._id).emit("typing");
+        });
+    });
     socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
     socket.on("fetch again", ({ users, chatName, admin }) => {
         if (!users) return;
@@ -92,12 +97,20 @@ io.on("connection", socket => {
 
     });
 
+    socket.on("fetch again chat", ({ users, id }) => {
+        if (!users) return;
+        users.forEach(it => {
+            // if (it._id === ._id) return;
+            socket.in(it._id).emit("fetch again chat", { id });
+        });
+
+    });
+
     socket.on("fetch again rename", ({ users, chatName, userName, prevName, curr, chatId }) => {
         if (!users) return;
         users.forEach(it => {
             if (it._id !== curr) socket.in(it._id).emit("fetch again rename", { chatName, userName, prevName, curr, chatId });
         });
-
     });
 
     let willEmit = true;
