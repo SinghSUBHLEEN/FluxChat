@@ -213,7 +213,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                 icon={<MdKeyboardBackspace fontSize="25px" />}
             /><span style={{ marginRight: "auto", marginLeft: "7px" }}>{(selectedChat.isGroupChat ? selectedChat.chatName : getSender(cookie.get("_id"), selectedChat.users)).length > 30 ? (selectedChat.isGroupChat ? selectedChat.chatName : getSender(cookie.get("_id"), selectedChat.users)).slice(0, 28) + "..." : (selectedChat.isGroupChat ? selectedChat.chatName : getSender(cookie.get("_id"), selectedChat.users))}</span>
 
-            {selectedChat.isGroupChat && <NavDropdown title={<IconButton isRound={true}
+            {selectedChat.isGroupChat && <NavDropdown align={"end"} title={<IconButton isRound={true}
                 variant="outline" size='md'
                 color="white"
                 borderWidth="0"

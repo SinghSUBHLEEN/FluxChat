@@ -5,6 +5,7 @@ import "./NotFound.css";
 import { Button } from '@chakra-ui/react';
 import { BiLinkExternal } from 'react-icons/bi';
 import Header from '../Header/Header';
+import NotFoundComponent from './NotFoundComponent';
 
 function NotFound() {
 
@@ -18,7 +19,7 @@ function NotFound() {
         <Header />
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "90vh" }}>
             <div style={{ color: "rgba(256, 256, 256, 0.9)", display: "flex" }}>
-                <div style={{ marginLeft: "auto", marginRight: "auto", fontSize: "100px", paddingRight: "10px", paddingLeft: "10%" }}><TbError404 /></div>
+                <div style={{ marginLeft: "auto", marginRight: "auto", fontSize: "100px", paddingRight: "10px", paddingLeft: "10%" }}><NotFoundComponent color="rgba(256, 256, 256, 0.1)" height="100" width="100" /></div>
 
                 <div style={{ marginLeft: "auto", marginRight: "auto" }}>
                     <div className="page-head" style={{ color: "rgba(256, 256, 256, 0.9)", width: "fit-content" }}>Page Not found<Button mx={2} onClick={handleTakeBack} variant="link" color="white">Go to home<BiLinkExternal /></Button></div>

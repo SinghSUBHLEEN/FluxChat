@@ -19,6 +19,7 @@ import UserModal from "./UserModal";
 import { RiChat1Fill } from "react-icons/ri";
 import { getSender } from "../Chat/chatLogic";
 import { MDBBadge, MDBIcon } from 'mdb-react-ui-kit';
+import { MdGroupAdd } from "react-icons/md";
 
 function Header() {
 
@@ -68,25 +69,27 @@ function Header() {
 
     const handleSearchSubmit = async (e) => {
         e.preventDefault();
-        if (!search) {
+        // setSearch(e.target.value);
+        if (!e.target.value) {
+            setSearchResult([]);
             return;
         }
 
         try {
             setLoading(true);
-            const s = await axios.get(`/api/search/${search}`);
+            const s = await axios.get(`/api/search/${e.target.value}`);
             setLoading(false);
             setSearchResult(s.data);
             // socket.emit("fetch again", )
-            if (s.data.length === 0) {
-                toast({
-                    title: "No such user",
-                    status: 'warning',
-                    duration: 4000,
-                    isClosable: true,
-                    position: "bottom-left"
-                })
-            }
+            // if (s.data.length === 0) {
+            //     toast({
+            //         title: "No such user",
+            //         status: 'warning',
+            //         duration: 4000,
+            //         isClosable: true,
+            //         position: "bottom-left"
+            //     })
+            // }
 
         } catch (error) {
             console.log(error);
@@ -145,7 +148,7 @@ function Header() {
                         variant="secondary"
                         isOpen={isOpen}
                         placement='left'
-                        onClose={onClose}
+                        onClose={() => { onClose() }}
                         size="xs"
                         className="headerDrawer"
                     >
@@ -170,7 +173,7 @@ function Header() {
                                     </div>
                                 </Container> */}
                                 <Container className="m-0" style={{ padding: '0' }}>
-                                    <span className="menuIcon" style={{ fontSize: "1.5rem", marginLeft: "0px", marginBottom: "0.3rem", color: "ghostwhite" }} onClick={handleBrand}><img
+                                    <span className="menuIcon" style={{ fontSize: "1.5rem", marginLeft: "6px", marginBottom: "0.3rem", color: "ghostwhite" }} onClick={handleBrand}><img
                                         src={IMAGES.icon}
                                         width="34"
                                         height="34"
@@ -180,40 +183,18 @@ function Header() {
                                 </Container>
                             </DrawerHeader>
                             <DrawerHeader className="menuHeader">
-                                <form className="m-0 p-0 b-0">
-                                    <FormControl className="p-0 m-0 d-flex" onClick={onOpen}>
-                                        <InputGroup>
-                                            {/* <
-                                                p={2}
-                                                onClick={onOpen}
-                                                bg="whiteAlpha.300"
-                                                color="whiteAlpha.800"
-                                                borderLeftRadius="3xl"
-                                                cursor="pointer"
-                                                width="12"
-                                                borderColor="gray"
-                                                borderWidth={0}
-                                            >
-                                                <BiSearch size="lg" />
-                                            </> */}
-                                            <InputLeftElement p={2}
-                                                color="whiteAlpha.800"
-                                                borderLeftRadius="3xl"
-                                                cursor="pointer"
-                                                borderColor="gray"
-                                                borderWidth={0} ><BiSearch size="md" /></InputLeftElement>
-                                            <Input type='text' placeholder="Search users" size="md" value={search} onChange={handleSearch} color="white  " fontSize="large" bg="whiteAlpha.50" borderWidth="thin" borderColor="gray" autoComplete="off" borderRadius="3xl" />
-                                        </InputGroup>
-                                        <IconButton type="submit" colorScheme="red" isRound="true"
-                                            fontSize="3xl"
-                                            ml={2}
-                                            px={4}
-                                            onClick={handleSearchSubmit}
-                                            icon={<IoSearch />}
-                                            mx={2}
-                                        />
-                                    </FormControl>
-                                </form>
+                                <FormControl className="p-0 m-0 d-flex" onClick={onOpen}>
+                                    <InputGroup>
+                                        <InputLeftAddon p={2}
+                                            color="whiteAlpha.700"
+                                            borderLeftRadius="3xl"
+                                            cursor="pointer"
+                                            bg="whiteAlpha.50"
+                                            borderColor="gray"
+                                            borderRightWidth={0} ><BiSearch size="md" /></InputLeftAddon>
+                                        <Input type='text' placeholder="Search users" size="md" onChange={handleSearchSubmit} color="white  " fontSize="large" bg="whiteAlpha.50" borderWidth="thin" borderColor="gray" autoComplete="off" borderRadius="3xl" _placeholder={{ color: "whiteAlpha.600" }} />
+                                    </InputGroup>
+                                </FormControl>
                             </DrawerHeader>
                             <DrawerBody className="menuBody">
                                 {!clear && (loading ? <Stack>
@@ -224,9 +205,9 @@ function Header() {
                                     <SkeletonCustom />
                                     <SkeletonCustom />
                                 </Stack> : (
-                                    searchResult ? searchResult.map((it) => {
+                                    searchResult.length ? searchResult.map((it) => {
                                         return (<UserListItem key={it._id} user={it} handleOnClick={function () { accessChat(it._id) }} />);
-                                    }) : <></>
+                                    }) : <div className="d-flex" style={{ width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}><span style={{ color: "white" }}><MdGroupAdd /></span></div>
                                 ))}
 
                             </DrawerBody>
@@ -234,27 +215,68 @@ function Header() {
                             </DrawerFooter>
                         </DrawerContent>
                     </Drawer>
-                    <div style={{ float: "left", marginLeft: '18px', fontWeight: "630", marginTop: "8px" }}>
+                    <div style={{ float: "left", marginLeft: '18px', fontWeight: "630", marginTop: "8px", display: "flex" }}>
                         {/* <div onClick={onOpen} style={{ fontSize: "x-large", marginTop: "0.42rem", paddingRight: "0.7rem" }} className="menuIcon">
                             <AiOutlineMenu variant="primary" />
                         </div> */}
-                        <span className="menuIcon" style={{ fontSize: "1.5rem", marginTop: "0.07rem", color: "ghostwhite" }} onClick={handleBrand}><img
-                            src={IMAGES.icon}
-                            width="34"
-                            height="34"
-                            className="d-inline-block align-top m-1"
-                            alt="Navbar logo"
-                        />FluxChat</span>
+                        {/* <Box
+                            display={{ base: "none", md: "flex" }}
+                            alignItems="center"
+                            fontSize="2xl"
+                            p={0}
+                            bg="whiteAlpha.200"
+                            color="white"
+                            borderRadius="full"
+                            p={2}
+                        >
+                            <span><BiSearchAlt /></span>
+                        </Box> */}
+
+                        <Box display="flex" className="menuIcon" style={{ fontSize: "1.5rem", marginTop: "0.07rem", color: "ghostwhite", }} onClick={handleBrand}>
+                            <span><img
+                                src={IMAGES.icon}
+                                width="34"
+                                height="34"
+                                className="d-inline-block align-top m-1"
+                                alt="Navbar logo"
+                            /></span><span>FluxChat</span></Box>
                     </div>
 
-                    <Navbar.Collapse
-                        id="responsive-navbar-nav" style={{ display: "flex", justifyContent: "flex-start" }}>
-                        {cook && <Container fluid className="p-0 mx-2" style={{ flex: 0.9 }}>
+                    {/* <Navbar.Collapse
+                        id="responsive-navbar-nav" style={{ display: "flex", justifyContent: "flex-start" }}> */}
+                    {cook &&
+                        <Tooltip label="Search users by name or email" hasArrow>
+                            <form className="m-0 p-0">
 
-                            <Tooltip label="Search users by name or email" hasArrow>
-                                <form className="m-0 p-0">
+                                <Box
+                                    display={{ base: "flex", md: "none" }}
+                                    alignItems="center"
+                                    flexDir="column"
+                                    p={0}
+                                    bg="inherit"
+                                    color="white"
+                                    w={{ base: "100%", md: "68%" }}
+                                    onClick={onOpen}
+                                    mt={2}
+                                    ml={1}
+                                ><IconButton isRound={true}
+                                    variant="outline" size='md'
+                                    color="white"
+                                    borderWidth="0"
+                                    _hover={{ bg: "whiteAlpha.200" }}
+                                    icon={<BiSearchAlt fontSize="25px" />} /></Box>
+
+                                <Box
+                                    display={{ base: "none", md: "flex" }}
+                                    alignItems="center"
+                                    flexDir="column"
+                                    p={0}
+                                    bg="inherit"
+                                    color="white"
+                                    w={{ base: "100%", md: "68%" }}
+                                >
                                     <InputGroup
-                                        width="fit-content"
+                                        width="120%"
                                         onClick={onOpen}
                                         // display="block"
                                         mx={"auto"}
@@ -272,6 +294,7 @@ function Header() {
                                         >
                                             <BiSearch size="lg" />
                                         </InputLeftAddon>
+
                                         <Input type='text' borderColor="gray" borderRadius="3xl" bg="whiteAlpha.300" placeholder="Search users" _placeholder={{ color: "whiteAlpha.800" }} borderWidth={0} />
                                         {/* <InputLeftElement onClick={onOpen}>
                                         <Button style={{ backgroundColor: "inherit", fontSize: "large" }}>
@@ -285,63 +308,69 @@ function Header() {
                                             </Button>
                                         </InputRightElement> */}
                                     </InputGroup>
-                                </form>
-                            </Tooltip>
-
-                        </Container>}
-                        {cook && <NavDropdown align={"end"} title={(<>
-                            <Tooltip label="Notifications" hasArrow>
-                                <Button
-                                    borderRadius="full"
-                                    variant="outline" size='md'
-                                    color="white"
-                                    borderWidth="0"
-                                    _hover={{ bg: "whiteAlpha.200" }}
-                                    className="icon-button"
-                                ><RiChat1Fill fontSize="25px" />
-                                    <span className="icon-button_badge">{notification.length}</span></Button>
-                            </Tooltip>
-                        </>)} id="collapsible-nav-dropdown" style={{
-                            // width: "7rem",
-                            boxShadow: "none",
-                            fontSize: "22px"
-                        }} className="dropDown" >
-                            {!notification.length ? <><Dropdown.Item style={{ color: "white", fontSize: "15px" }}
-                                className="m-0">
-                                No Notifications
-                            </Dropdown.Item></> : <>
-                                {notification.map(it => (
-                                    <Dropdown.Item
-                                        key={it._id}
-                                        style={{ color: "white", fontSize: "15px" }}
-                                        className="m-0"
-                                        onClick={() => {
-                                            setSelectedChat(it.chat);
-                                            setNotification(notification.filter(c => c !== it));
-                                        }}
-                                    >{it.chat.isGroupChat ? ("New Messages in " + it.chat.chatName) : ("New messages from " + getSender(cookie.get("_id"), it.chat.users))}</Dropdown.Item>))}
-                            </>}
-                        </NavDropdown>}
-
-                        {cook && <div style={{ flex: 0.1, display: "block" }}><NavDropdown align={"end"} title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginLeft: "4rem" }} />  </>} id="collapsible-nav-dropdown" style={{
-                            // width: "7rem",
-                            boxShadow: "none",
-                            padding: "0"
-                        }} className="dropDown" >
-                            <UserModal>
-                                <Tooltip hasArrow label={cookName}>
-                                    <Dropdown.Item>
-                                        <div className="m-0 p-0 d-flex customElement">
-                                            <FaUserLarge fontSize="1.2rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " My profile"}</span>
-                                        </div>
-                                    </Dropdown.Item>
+                                </Box>
+                            </form>
+                        </Tooltip>}
+                    <Box alignSelf={"center"}>
+                        <Box display={"flex"} width={"auto"} px={3} >
+                            <Box display="inline" mr={10} mt={1}>{cook && <NavDropdown align={"end"} title={(<>
+                                <Tooltip label="Notifications" hasArrow>
+                                    <Button
+                                        borderRadius="full"
+                                        variant="outline" size='md'
+                                        color="white"
+                                        mt={1}
+                                        borderWidth="0"
+                                        p={0}
+                                        _hover={{ bg: "whiteAlpha.200" }}
+                                        className="icon-button"
+                                    ><RiChat1Fill fontSize="28.5px" />
+                                        <span className="icon-button_badge">{notification.length > 9 ? " 9+" : notification.length}</span></Button>
                                 </Tooltip>
-                            </UserModal>
-                            <Dropdown.Divider />
-                            <Dropdown.Item><div className="m-0 p-0 d-flex customElement" onClick={handleLogout}><TbLogout2 fontSize="1.6rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " Logout"}</span></div></Dropdown.Item>
-                        </NavDropdown></div>}
-                    </Navbar.Collapse>
-
+                            </>)} id="collapsible-nav-dropdown" style={{
+                                // width: "7rem",
+                                boxShadow: "none",
+                                fontSize: "22px"
+                            }} className="dropDown" >
+                                {!notification.length ? <><Dropdown.Item style={{ color: "white", fontSize: "15px" }}
+                                    className="m-0">
+                                    No Notifications
+                                </Dropdown.Item></> : <>
+                                    {notification.map(it => (
+                                        <Dropdown.Item
+                                            key={it._id}
+                                            style={{ color: "white", fontSize: "15px" }}
+                                            className="m-0"
+                                            onClick={() => {
+                                                setSelectedChat(it.chat);
+                                                setNotification(notification.filter(c => c !== it));
+                                            }}
+                                        >{it.chat.isGroupChat ? ("New Messages in " + it.chat.chatName) : ("New messages from " + getSender(cookie.get("_id"), it.chat.users))}</Dropdown.Item>))}
+                                </>}
+                            </NavDropdown>}
+                            </Box>
+                            <Box display="inline">
+                                {cook && <div style={{ flex: 0.1, display: "block" }}><NavDropdown align={"end"} title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{}} />  </>} id="collapsible-nav-dropdown" style={{
+                                    // width: "7rem",
+                                    width: "fit-content",
+                                    boxShadow: "none",
+                                    padding: "0"
+                                }} className="dropDown" >
+                                    <UserModal>
+                                        <Tooltip hasArrow label={cookName}>
+                                            <Dropdown.Item>
+                                                <div className="m-0 p-0 d-flex customElement">
+                                                    <FaUserLarge fontSize="1.2rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " My profile"}</span>
+                                                </div>
+                                            </Dropdown.Item>
+                                        </Tooltip>
+                                    </UserModal>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item><div className="m-0 p-0 d-flex customElement" onClick={handleLogout}><TbLogout2 fontSize="1.6rem" style={{ marginRight: "0.8rem" }} /><span>{" " + " Logout"}</span></div></Dropdown.Item>
+                                </NavDropdown></div>}</Box>
+                            {/* </Navbar.Collapse> */}
+                        </Box>
+                    </Box>
                 </Container >
             </Navbar >
         </>
