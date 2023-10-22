@@ -173,7 +173,8 @@ function MyChats({ fetchAgain, setFetchAgain }) {
             >
                 {chats.length ? <>
                     <Stack overflowY="hidden" width="auto" gap={0}>
-                        {chats.length && chats.map((chat, i) => {
+                        {chats.length > 0 && chats.map((chat, i) => {
+                            {/* console.log(chat); */ }
                             if (isValidChat(search, chat))
                                 return <></>
                             else
@@ -191,7 +192,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                                     borderBottomWidth="thin"
                                     borderColor="whiteAlpha.200"
                                     key={chat._id}
-                                    _hover={chat._id !== selectedChat._id && { bg: "whiteAlpha.200" }}
+                                    _hover={(!selectedChat || chat._id !== selectedChat._id) && { bg: "whiteAlpha.200" }}
                                 >
                                     <div className='d-flex m-0 p-0'>
                                         <div style={{ flex: 0.1, paddingTop: "auto", paddingBottom: "auto" }}><Avatar

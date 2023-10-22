@@ -115,10 +115,10 @@ function Login() {
                                         onChange={handlePassword}
                                     />
 
-                                    <InputRightElement width='fit-content' mr={1}>
-                                        <Button h='1.75rem' size='sm' onClick={handleClick} style={{ backgroundColor: "white", boxShadow: 'none', color: "rgba(0, 0, 0, 0.6)", fontWeight: "thin" }} p={0} >
-                                            {show ? <PiEyeClosedBold fontSize="23px" /> : <PiEyeBold fontSize="23px" />}
-                                        </Button>
+                                    <InputRightElement width='fit-content' mr={1} color="RGBA(0, 0, 0, 0.7)">
+                                        {/* <Button h='1.75rem' size='sm' onClick={handleClick} style={{ backgroundColor: "white", boxShadow: 'none', fontWeight: "thin" }} p={0} > */}
+                                        {show ? <span onClick={handleClick}><PiEyeClosedDuotone fontSize="23px" /></span> : <span onClick={handleClick}><PiEyeDuotone fontSize="23px" /></span>}
+                                        {/* </Button> */}
                                     </InputRightElement>
                                 </InputGroup>
                                 {!isError2 ? (
@@ -134,10 +134,10 @@ function Login() {
                                     Remember me
                                 </Checkbox>
                             </FormControl>
-                            {!load ? <Button type="submit" colorScheme='red' marginTop={4} borderRadius={"0.6rem"} p={4} onClick={handleSubmit}>Sign in</Button> : <Button isLoading colorScheme='red' padding={5} marginTop={4}
+                            {!load ? <Button type="submit" colorScheme='red' marginTop={4} borderRadius="xl" p={4} onClick={handleSubmit}>Sign in</Button> : <Button isLoading colorScheme='red' padding={5} marginTop={4}
                                 spinner={<ClipLoader size={25} color='white' />}></Button>}
                             {alert !== "" ? <div className="d-flex m6 p3" style={{ marginTop: "0.4rem" }}>
-                                <Alert status='error' margin={2}>
+                                <Alert borderRadius="lg" status='error' margin={2}>
                                     <AlertIcon />
                                     {alert}
                                 </Alert>

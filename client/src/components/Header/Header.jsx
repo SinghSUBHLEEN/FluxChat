@@ -209,8 +209,8 @@ function Header() {
                                     searchResult.length > 0 ? searchResult.map((it) => {
                                         return (<UserListItem key={it._id} user={it} handleOnClick={function () { accessChat(it._id) }} />);
                                     }) : <div className="d-flex" style={{ width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
-                                        <Text fontSize="3xl" pb={3} display="flex" color="whiteAlpha.800">
-                                            <AiOutlineUserAdd fontSize="40px" style={{ marginRight: "10px" }} />{"Add Users"}
+                                        <Text fontSize="2xl" pb={3} display="flex" color="whiteAlpha.800">
+                                            <AiOutlineUserAdd fontSize="35px" style={{ marginRight: "8px", }} />{"Add Users"}
                                         </Text></div>
                                 ))}
 

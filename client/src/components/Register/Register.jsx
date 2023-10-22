@@ -23,7 +23,7 @@ import axios from "axios";
 import { ClipLoader } from "react-spinners";
 import cookie from "js-cookie";
 import Header from "../Header/Header";
-import { PiEyeBold, PiEyeClosedBold } from "react-icons/pi";
+import { PiEyeBold, PiEyeClosedBold, PiEyeClosedDuotone, PiEyeDuotone } from "react-icons/pi";
 
 
 function Register() {
@@ -166,10 +166,8 @@ function Register() {
                                         value={password}
                                         onChange={handlePassword}
                                     />
-                                    <InputRightElement width='fit-content' mr={1}>
-                                        <Button h='1.75rem' size='sm' onClick={handleClick1} style={{ backgroundColor: "white", boxShadow: 'none', color: "rgba(0, 0, 0, 0.6)", fontWeight: "thin" }} p={0} >
-                                            {show1 ? <PiEyeClosedBold fontSize="23px" /> : <PiEyeBold fontSize="23px" />}
-                                        </Button>
+                                    <InputRightElement width='fit-content' mr={1} color="RGBA(0, 0, 0, 0.7)">
+                                        {show2 ? <span onClick={handleClick2}><PiEyeClosedDuotone fontSize="23px" /></span> : <span onClick={handleClick2}><PiEyeDuotone fontSize="23px" /></span>}
                                     </InputRightElement>
                                 </InputGroup>
                                 {!isError2 ? (
@@ -190,10 +188,9 @@ function Register() {
                                         value={cpass}
                                         onChange={handleCpass}
                                     />
-                                    <InputRightElement width='fit-content' mr={1}>
-                                        <Button h='1.75rem' size='sm' onClick={handleClick2} style={{ backgroundColor: "white", boxShadow: 'none', color: "rgba(0, 0, 0, 0.6)", fontWeight: "thin" }} p={0} >
-                                            {show2 ? <PiEyeClosedBold fontSize="23px" /> : <PiEyeBold fontSize="23px" />}
-                                        </Button>
+                                    <InputRightElement width='fit-content' mr={1} color="RGBA(0, 0, 0, 0.7)">
+                                        {show1 ? <span onClick={handleClick1}><PiEyeClosedDuotone fontSize="23px" /></span> : <span onClick={handleClick1}><PiEyeDuotone fontSize="23px" /></span>}
+                                        {/* </Button> */}
                                     </InputRightElement>
                                 </InputGroup>
                             </FormControl>
@@ -218,11 +215,11 @@ function Register() {
                                     Remember me
                                 </Checkbox>
                             </FormControl>
-                            {!load ? <Button type="submit" colorScheme='red' marginTop={4} borderRadius={"0.6rem"} p={4} onClick={handleSubmit}>Sign up</Button> : <Button isLoading colorScheme='red' padding={5} marginTop={4}
+                            {!load ? <Button type="submit" colorScheme='red' marginTop={4} borderRadius="xl" p={4} onClick={handleSubmit}>Sign up</Button> : <Button isLoading colorScheme='red' padding={5} marginTop={4}
                                 spinner={<ClipLoader size={25} color='white' />}></Button>}
 
                             {alert !== "" ? <div className="d-flex m6 p3" style={{ marginTop: "0.4rem" }}>
-                                <Alert status='error' margin={2}>
+                                <Alert borderRadius="lg" status='error' margin={2}>
                                     <AlertIcon />
                                     {alert}
                                 </Alert>
