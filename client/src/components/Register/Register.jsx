@@ -23,6 +23,7 @@ import axios from "axios";
 import { ClipLoader } from "react-spinners";
 import cookie from "js-cookie";
 import Header from "../Header/Header";
+import { PiEyeBold, PiEyeClosedBold } from "react-icons/pi";
 
 
 function Register() {
@@ -165,10 +166,9 @@ function Register() {
                                         value={password}
                                         onChange={handlePassword}
                                     />
-
-                                    <InputRightElement width='4.5rem'>
-                                        <Button h='1.75rem' size='sm' onClick={handleClick1} style={{ backgroundColor: "white", boxShadow: 'none' }}>
-                                            {show1 ? 'Hide' : 'Show'}
+                                    <InputRightElement width='fit-content' mr={1}>
+                                        <Button h='1.75rem' size='sm' onClick={handleClick1} style={{ backgroundColor: "white", boxShadow: 'none', color: "rgba(0, 0, 0, 0.6)", fontWeight: "thin" }} p={0} >
+                                            {show1 ? <PiEyeClosedBold fontSize="23px" /> : <PiEyeBold fontSize="23px" />}
                                         </Button>
                                     </InputRightElement>
                                 </InputGroup>
@@ -190,9 +190,9 @@ function Register() {
                                         value={cpass}
                                         onChange={handleCpass}
                                     />
-                                    <InputRightElement width='4.5rem'>
-                                        <Button h='1.75rem' size='sm' onClick={handleClick2} style={{ backgroundColor: "white", boxShadow: 'none' }}>
-                                            {show2 ? 'Hide' : 'Show'}
+                                    <InputRightElement width='fit-content' mr={1}>
+                                        <Button h='1.75rem' size='sm' onClick={handleClick2} style={{ backgroundColor: "white", boxShadow: 'none', color: "rgba(0, 0, 0, 0.6)", fontWeight: "thin" }} p={0} >
+                                            {show2 ? <PiEyeClosedBold fontSize="23px" /> : <PiEyeBold fontSize="23px" />}
                                         </Button>
                                     </InputRightElement>
                                 </InputGroup>

@@ -12,6 +12,7 @@ import {
     Alert,
     useToast,
     AlertIcon,
+    Box
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import "./Login.css";
@@ -21,6 +22,7 @@ import axios from "axios"
 import { ClipLoader } from "react-spinners";
 import cookie from "js-cookie";
 import Header from "../Header/Header";
+import { PiEyeBold, PiEyeClosed, PiEyeClosedBold, PiEyeClosedDuotone, PiEyeDuotone, PiEyeLight } from "react-icons/pi";
 
 
 function Login() {
@@ -85,7 +87,9 @@ function Login() {
             <div className="formContainer">
                 <div className="myForm d-flex justify-content-center align-items-center">
                     <div style={{ display: "flex", width: "50%", backgroundColor: "white", borderRadius: "2rem" }}>
-                        <div style={{ flex: 0.6, backgroundColor: "white", borderRadius: "2rem", display: "flex", justifyItems: "center", alignItems: "center" }}><Image src={IMAGES.image1} alt='logo image' style={{ borderRadius: "2rem" }} /></div>
+                        <div style={{ flex: 0.6, backgroundColor: "white", borderRadius: "2rem", display: "flex", justifyItems: "center", alignItems: "center" }}>
+                            <Image src={IMAGES.image1} alt='logo image' style={{ borderRadius: "2rem" }} />
+                        </div>
                         <div className="verticalLine" />
                         <form className="rounded p-4 p-sm-7 signup-form loginContainer">
                             <h1 className="loginHead">Sign in</h1>
@@ -111,9 +115,9 @@ function Login() {
                                         onChange={handlePassword}
                                     />
 
-                                    <InputRightElement width='4.5rem'>
-                                        <Button h='1.75rem' size='sm' onClick={handleClick} style={{ backgroundColor: "white", boxShadow: 'none' }}>
-                                            {show ? 'Hide' : 'Show'}
+                                    <InputRightElement width='fit-content' mr={1}>
+                                        <Button h='1.75rem' size='sm' onClick={handleClick} style={{ backgroundColor: "white", boxShadow: 'none', color: "rgba(0, 0, 0, 0.6)", fontWeight: "thin" }} p={0} >
+                                            {show ? <PiEyeClosedBold fontSize="23px" /> : <PiEyeBold fontSize="23px" />}
                                         </Button>
                                     </InputRightElement>
                                 </InputGroup>

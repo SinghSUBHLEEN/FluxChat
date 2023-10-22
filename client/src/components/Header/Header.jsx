@@ -20,6 +20,7 @@ import { RiChat1Fill } from "react-icons/ri";
 import { getSender } from "../Chat/chatLogic";
 import { MDBBadge, MDBIcon } from 'mdb-react-ui-kit';
 import { MdGroupAdd } from "react-icons/md";
+import AddUser from "./AddUser";
 
 function Header() {
 
@@ -207,7 +208,7 @@ function Header() {
                                 </Stack> : (
                                     searchResult.length ? searchResult.map((it) => {
                                         return (<UserListItem key={it._id} user={it} handleOnClick={function () { accessChat(it._id) }} />);
-                                    }) : <div className="d-flex" style={{ width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}><span style={{ color: "white" }}><MdGroupAdd /></span></div>
+                                    }) : <div className="d-flex" style={{ width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}><span style={{ color: "white" }}><AddUser width="90" height="90" /></span></div>
                                 ))}
 
                             </DrawerBody>
