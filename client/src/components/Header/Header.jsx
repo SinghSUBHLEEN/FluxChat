@@ -4,7 +4,7 @@ import { TbLogout2 } from "react-icons/tb";
 import { IoSearch } from "react-icons/io5";
 import { FaUserLarge } from "react-icons/fa6";
 import { BiSearch, BiSearchAlt, BiSolidPencil } from "react-icons/bi";
-import { Drawer, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, useToast, DrawerFooter, Avatar, Tooltip, Button, Input, FormControl, InputLeftElement, InputGroup, InputRightElement, DrawerOverlay, DrawerCloseButton, Box, Stack, Skeleton, Spinner, ModalOverlay, ModalContent, Menu, MenuButton, MenuList, MenuItem, IconButton, InputLeftAddon } from "@chakra-ui/react";
+import { Drawer, DrawerContent, DrawerHeader, DrawerBody, useDisclosure, useToast, DrawerFooter, Avatar, Tooltip, Button, Input, FormControl, InputLeftElement, InputGroup, InputRightElement, DrawerOverlay, DrawerCloseButton, Box, Stack, Skeleton, Spinner, ModalOverlay, ModalContent, Menu, MenuButton, MenuList, MenuItem, IconButton, InputLeftAddon, Text } from "@chakra-ui/react";
 import { Navbar, Container, Form, NavDropdown, Modal, Dropdown, DropdownButton, Nav, DropdownItem } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import IMAGES from "../../images/Images";
@@ -14,7 +14,7 @@ import axios from "axios";
 import UserListItem from "../UserListItem/UserListItem";
 import { ChatState } from "../Context/ChatProvider";
 import SkeletonCustom from "../SkeletonCustom/SkeletonCustom";
-import { AiOutlineMenu } from "react-icons/ai";
+import { AiOutlineMenu, AiOutlineUserAdd } from "react-icons/ai";
 import UserModal from "./UserModal";
 import { RiChat1Fill } from "react-icons/ri";
 import { getSender } from "../Chat/chatLogic";
@@ -206,9 +206,12 @@ function Header() {
                                     <SkeletonCustom />
                                     <SkeletonCustom />
                                 </Stack> : (
-                                    searchResult.length ? searchResult.map((it) => {
+                                    searchResult.length > 0 ? searchResult.map((it) => {
                                         return (<UserListItem key={it._id} user={it} handleOnClick={function () { accessChat(it._id) }} />);
-                                    }) : <div className="d-flex" style={{ width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}><span style={{ color: "white" }}><AddUser width="90" height="90" /></span></div>
+                                    }) : <div className="d-flex" style={{ width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                                        <Text fontSize="3xl" pb={3} display="flex" color="whiteAlpha.800">
+                                            <AiOutlineUserAdd fontSize="40px" style={{ marginRight: "10px" }} />{"Add Users"}
+                                        </Text></div>
                                 ))}
 
                             </DrawerBody>
@@ -256,10 +259,10 @@ function Header() {
                                     p={0}
                                     bg="inherit"
                                     color="white"
-                                    w={{ base: "100%", md: "68%" }}
+                                    w={{ base: "100%", md: "38%" }}
                                     onClick={onOpen}
                                     mt={2}
-                                    ml={1}
+                                // ml={1}
                                 ><IconButton isRound={true}
                                     variant="outline" size='md'
                                     color="white"
@@ -326,7 +329,7 @@ function Header() {
                                         _hover={{ bg: "whiteAlpha.200" }}
                                         className="icon-button"
                                     ><RiChat1Fill fontSize="28.5px" />
-                                        <span className="icon-button_badge">{notification.length > 9 ? " 9+" : notification.length}</span></Button>
+                                        {notification.length > 0 && <span className="icon-button_badge">{notification.length > 9 ? " 9+" : notification.length}</span>}</Button>
                                 </Tooltip>
                             </>)} id="collapsible-nav-dropdown" style={{
                                 // width: "7rem",

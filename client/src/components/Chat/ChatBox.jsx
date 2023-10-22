@@ -45,7 +45,7 @@ function ChatBox(props) {
             w={{ base: "100%", md: "68%" }}
             borderRadius="lg"
             borderWidth="thin"
-            borderColor="whiteAlpha.500"
+            borderColor="whiteAlpha.400"
         >
             <SingleChat {...props} loading={loading} setLoading={setLoading} fetchChats={fetchChats} />
         </Box>

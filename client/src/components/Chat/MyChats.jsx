@@ -39,6 +39,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
 
     const fetchChats2 = async () => {
         try {
+            setLoading(true);
             if (!chats) setLoading(true);
             const { data } = await axios.get("/api/chat");
             setChats(data);
@@ -113,9 +114,9 @@ function MyChats({ fetchAgain, setFetchAgain }) {
         w={{ base: "100%", md: "31%" }}
         height="fit-content"
         // overflowY="hidden"
-        borderRadius="2xl"
-        borderWidth="thin"
-        borderColor="whiteAlpha.500"
+        borderRadius="xl"
+        // borderWidth="thin"
+        borderColor="whiteAlpha.50"
     >
         <Box
             pb={3}
@@ -136,6 +137,8 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                     </Button> */}
                     <IconButton isRound={true}
                         colorScheme='red'
+                        // bg="red.500"
+                        // _hover={{ bg: "red.700" }}
                         d="flex"
                         aria-label='Call Segun'
                         size='lg'
@@ -163,14 +166,14 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                 w="100%"
                 h="100%"
                 color="white"
-                borderRadius="lg"
+                borderRadius="0"
                 overflowY="scroll"
-                maxHeight="67.65vh"
-                height="fit-content"
+                height="67vh"
+            // height="fit-content"
             >
                 {chats.length ? <>
-                    <Stack overflowY="hidden" width="auto">
-                        {chats.length && chats.map(chat => {
+                    <Stack overflowY="hidden" width="auto" gap={0}>
+                        {chats.length && chats.map((chat, i) => {
                             if (isValidChat(search, chat))
                                 return <></>
                             else
@@ -179,16 +182,18 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                                     cursor="pointer"
                                     overflowY="hidden"
                                     d="flex"
-                                    bg={selectedChat === chat ? "rgba(99,179,237, 0.7)" : "whiteAlpha.100"}
+                                    bg={selectedChat === chat ? "whiteAlpha.300" : "whiteAlpha.50"}
                                     w="100%"
                                     px={3}
                                     py={2}
-                                    borderRadius="lg"
+                                    borderTopRadius={i === 0 && "lg"}
+                                    borderBottomRadius={i === chats.length - 1 && "lg"}
+                                    borderBottomWidth="thin"
+                                    borderColor="whiteAlpha.200"
                                     key={chat._id}
-                                    borderWidth="thin"
-                                    borderColor="whiteAlpha.600"
+                                    _hover={chat._id !== selectedChat._id && { bg: "whiteAlpha.200" }}
                                 >
-                                    <div className='d-flex'>
+                                    <div className='d-flex m-0 p-0'>
                                         <div style={{ flex: 0.1, paddingTop: "auto", paddingBottom: "auto" }}><Avatar
                                             mr={2}
                                             size='md'

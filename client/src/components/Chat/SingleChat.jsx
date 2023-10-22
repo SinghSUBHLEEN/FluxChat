@@ -196,7 +196,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
             fontSize={{ base: "20px", md: "25px" }}
             p={3}
             w="100%"
-            bg="whiteAlpha.200"
+            bg="whiteAlpha.50"
             display="flex"
             justifyContent={{ base: "space-between" }}
             alignItems="left"
@@ -279,7 +279,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
                                     width="12"
                                     borderWidth={0}
                                 >
-                                    <PiChatsTeardropDuotone size="lg" />
+                                    {!lockInput ? <PiChatsTeardropDuotone size="lg" /> : <Spinner color="whiteAlpha.700" />}
                                 </InputLeftAddon>
                                 <Input
                                     borderWidth={0}
