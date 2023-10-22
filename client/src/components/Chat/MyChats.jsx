@@ -189,7 +189,7 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                                     py={2}
                                     borderTopRadius={i === 0 && "lg"}
                                     borderBottomRadius={i === chats.length - 1 && "lg"}
-                                    borderBottomWidth="thin"
+                                    borderBottomWidth={i !== chat.length - 1 && "thin"}
                                     borderColor="whiteAlpha.200"
                                     key={chat._id}
                                     _hover={(!selectedChat || chat._id !== selectedChat._id) && { bg: "whiteAlpha.200" }}
@@ -207,12 +207,12 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                                         </div>
                                         <div style={{ flex: 0.9, overflow: "hidden", display: "inline" }}>
                                             <span style={{
-                                                display: "block", fontSize: "1.35rem", width: "100%", maxHeight: "25px", overflowY: "hidden"
+                                                display: "block", fontSize: "1.35rem", width: "100%", maxHeight: "30px", overflowY: "hidden"
                                             }}>
                                                 {(!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).length > 28 ? (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).slice(0, 30) + "..." : (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName)
                                                 }
                                             </span>
-                                            <span style={{ display: "block", fontSize: "medium", maxHeight: "20px", wordBreak: "break-word" }}>{chat && chat.latestMessage ? chat.latestMessage.content : ""}</span>
+                                            <span style={{ display: "block", fontSize: "medium", maxHeight: "28px", wordBreak: "break-word" }}>{chat && chat.latestMessage ? chat.latestMessage.content : ""}</span>
                                         </div>
                                     </div>
                                     {/* <Text>

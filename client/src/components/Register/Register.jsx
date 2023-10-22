@@ -14,6 +14,7 @@ import {
     useToast,
     InputLeftElement,
     Spinner,
+    InputRightAddon,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import "./Register.css";
@@ -166,9 +167,15 @@ function Register() {
                                         value={password}
                                         onChange={handlePassword}
                                     />
-                                    <InputRightElement width='fit-content' mr={1} color="RGBA(0, 0, 0, 0.7)">
-                                        {show2 ? <span onClick={handleClick2}><PiEyeClosedDuotone fontSize="23px" /></span> : <span onClick={handleClick2}><PiEyeDuotone fontSize="23px" /></span>}
-                                    </InputRightElement>
+                                    <InputRightAddon width='fit-content' p={0} bg="inherit" mr={1} color="RGBA(0, 0, 0, 0.7)" borderLeftWidth={0} >
+                                        {show1 ? <button onClick={e => {
+                                            e.preventDefault()
+                                            handleClick1()
+                                        }}><PiEyeClosedDuotone fontSize="23px" /></button> : <button onClick={e => {
+                                            e.preventDefault()
+                                            handleClick1()
+                                        }}><PiEyeDuotone fontSize="23px" /></button>}
+                                    </InputRightAddon>
                                 </InputGroup>
                                 {!isError2 ? (
                                     <FormHelperText>
@@ -188,10 +195,16 @@ function Register() {
                                         value={cpass}
                                         onChange={handleCpass}
                                     />
-                                    <InputRightElement width='fit-content' mr={1} color="RGBA(0, 0, 0, 0.7)">
-                                        {show1 ? <span onClick={handleClick1}><PiEyeClosedDuotone fontSize="23px" /></span> : <span onClick={handleClick1}><PiEyeDuotone fontSize="23px" /></span>}
+                                    <InputRightAddon width='fit-content' p={0} bg="inherit" mr={1} color="RGBA(0, 0, 0, 0.7)">
+                                        {show2 ? <button onClick={e => {
+                                            e.preventDefault()
+                                            handleClick2()
+                                        }}><PiEyeClosedDuotone fontSize="23px" /></button> : <span onClick={e => {
+                                            e.preventDefault()
+                                            handleClick2()
+                                        }}><PiEyeDuotone fontSize="23px" /></span>}
                                         {/* </Button> */}
-                                    </InputRightElement>
+                                    </InputRightAddon>
                                 </InputGroup>
                             </FormControl>
                             <FormControl id="pic">

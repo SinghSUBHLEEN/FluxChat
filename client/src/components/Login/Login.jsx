@@ -12,7 +12,8 @@ import {
     Alert,
     useToast,
     AlertIcon,
-    Box
+    Box,
+    InputRightAddon
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import "./Login.css";
@@ -115,19 +116,12 @@ function Login() {
                                         onChange={handlePassword}
                                     />
 
-                                    <InputRightElement width='fit-content' mr={1} color="RGBA(0, 0, 0, 0.7)">
+                                    <InputRightElement width='fit-content' p={0} bg="inherit" mr={1} color="RGBA(0, 0, 0, 0.7)">
                                         {/* <Button h='1.75rem' size='sm' onClick={handleClick} style={{ backgroundColor: "white", boxShadow: 'none', fontWeight: "thin" }} p={0} > */}
-                                        {show ? <span onClick={handleClick}><PiEyeClosedDuotone fontSize="23px" /></span> : <span onClick={handleClick}><PiEyeDuotone fontSize="23px" /></span>}
+                                        {show ? <button onClick={handleClick}><PiEyeClosedDuotone fontSize="23px" /></button> : <button onClick={handleClick}><PiEyeDuotone fontSize="23px" /></button>}
                                         {/* </Button> */}
                                     </InputRightElement>
                                 </InputGroup>
-                                {!isError2 ? (
-                                    <FormHelperText>
-                                        {"We'll never share your password"}
-                                    </FormHelperText>
-                                ) : (
-                                    <FormErrorMessage>Password is required.</FormErrorMessage>
-                                )}
                             </FormControl>
                             <FormControl>
                                 <Checkbox colorScheme='red' value={rem} onChange={handleRem} marginTop={4}>
