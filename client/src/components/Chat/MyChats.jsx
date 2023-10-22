@@ -206,10 +206,13 @@ function MyChats({ fetchAgain, setFetchAgain }) {
                                         />
                                         </div>
                                         <div style={{ flex: 0.9, overflow: "hidden", display: "inline" }}>
-                                            <span style={{ display: "block", fontSize: "1.35rem", width: "100%" }}>
-                                                {(!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).length > 18 ? (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).slice(0, 16) + "..." : (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName)}
+                                            <span style={{
+                                                display: "block", fontSize: "1.35rem", width: "100%", maxHeight: "25px", overflowY: "hidden"
+                                            }}>
+                                                {(!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).length > 28 ? (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName).slice(0, 30) + "..." : (!chat.isGroupChat ? getSender(loggedUser, chat.users) : chat.chatName)
+                                                }
                                             </span>
-                                            <span style={{ display: "block", fontSize: "medium" }}>{chat && chat.latestMessage ? chat.latestMessage.content : ""}</span>
+                                            <span style={{ display: "block", fontSize: "medium", maxHeight: "20px", wordBreak: "break-word" }}>{chat && chat.latestMessage ? chat.latestMessage.content : ""}</span>
                                         </div>
                                     </div>
                                     {/* <Text>

@@ -259,7 +259,7 @@ function Header() {
                                     p={0}
                                     bg="inherit"
                                     color="white"
-                                    w={{ base: "100%", md: "38%" }}
+                                    w={{ base: "fit-content", md: "38%" }}
                                     onClick={onOpen}
                                     mt={2}
                                 // ml={1}
@@ -316,8 +316,8 @@ function Header() {
                             </form>
                         </Tooltip>}
                     <Box alignSelf={"center"}>
-                        <Box display={"flex"} width={"auto"} px={3} >
-                            <Box display="inline" mr={10} mt={1}>{cook && <NavDropdown align={"end"} title={(<>
+                        <Box display={"flex"} justifyContent={"space-between"}  >
+                            <Box display="inline" mr={4} mt={1}>{cook && <NavDropdown align={"end"} title={(<>
                                 <Tooltip label="Notifications" hasArrow>
                                     <Button
                                         borderRadius="full"
@@ -354,7 +354,7 @@ function Header() {
                             </NavDropdown>}
                             </Box>
                             <Box display="inline">
-                                {cook && <div style={{ flex: 0.1, display: "block" }}><NavDropdown align={"end"} title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{}} />  </>} id="collapsible-nav-dropdown" style={{
+                                {cook && <div style={{ display: "block" }}><NavDropdown align={"end"} title={<><Avatar size="md" bg='red.600' _hover={{ bg: "red.400" }} src={cookie.get("img")} name={cookie.get("name")} color="white" style={{ marginRight: "4px" }} />  </>} id="collapsible-nav-dropdown" style={{
                                     // width: "7rem",
                                     width: "fit-content",
                                     boxShadow: "none",
