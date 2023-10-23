@@ -1,6 +1,9 @@
 # FluxChat
 FluxChat is a live chat application. Users can chat in real time.
 
+
+Web App link : [fluxchat.onrender.com](https://fluxchat.onrender.com/)
+
 ## Setting everything up (npm install):
 
 Before running anything, we need to setup everything first. We need to cd over to the client folder and run # `npm install`. 
