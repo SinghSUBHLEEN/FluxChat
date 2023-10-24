@@ -118,7 +118,13 @@ function Login() {
 
                                     <InputRightElement width='fit-content' p={0} bg="inherit" mr={1} color="RGBA(0, 0, 0, 0.7)">
                                         {/* <Button h='1.75rem' size='sm' onClick={handleClick} style={{ backgroundColor: "white", boxShadow: 'none', fontWeight: "thin" }} p={0} > */}
-                                        {show ? <button onClick={handleClick}><PiEyeClosedDuotone fontSize="23px" /></button> : <button onClick={handleClick}><PiEyeDuotone fontSize="23px" /></button>}
+                                        {show ? <button onClick={e => {
+                                            e.preventDefault()
+                                            handleClick()
+                                        }}><PiEyeClosedDuotone fontSize="23px" /></button> : <button onClick={e => {
+                                            e.preventDefault()
+                                            handleClick()
+                                        }}><PiEyeDuotone fontSize="23px" /></button>}
                                         {/* </Button> */}
                                     </InputRightElement>
                                 </InputGroup>

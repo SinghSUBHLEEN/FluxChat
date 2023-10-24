@@ -167,7 +167,7 @@ function Register() {
                                         value={password}
                                         onChange={handlePassword}
                                     />
-                                    <InputRightAddon width='fit-content' p={0} bg="inherit" mr={1} color="RGBA(0, 0, 0, 0.7)" borderLeftWidth={0} >
+                                    <InputRightElement width='fit-content' p={0} bg="inherit" mr={1} color="RGBA(0, 0, 0, 0.7)"  >
                                         {show1 ? <button onClick={e => {
                                             e.preventDefault()
                                             handleClick1()
@@ -175,7 +175,7 @@ function Register() {
                                             e.preventDefault()
                                             handleClick1()
                                         }}><PiEyeDuotone fontSize="23px" /></button>}
-                                    </InputRightAddon>
+                                    </InputRightElement>
                                 </InputGroup>
                                 {!isError2 ? (
                                     <FormHelperText>
@@ -195,7 +195,7 @@ function Register() {
                                         value={cpass}
                                         onChange={handleCpass}
                                     />
-                                    <InputRightAddon width='fit-content' p={0} bg="inherit" mr={1} color="RGBA(0, 0, 0, 0.7)">
+                                    <InputRightElement width='fit-content' p={0} bg="inherit" mr={1} color="RGBA(0, 0, 0, 0.7)">
                                         {show2 ? <button onClick={e => {
                                             e.preventDefault()
                                             handleClick2()
@@ -204,7 +204,7 @@ function Register() {
                                             handleClick2()
                                         }}><PiEyeDuotone fontSize="23px" /></span>}
                                         {/* </Button> */}
-                                    </InputRightAddon>
+                                    </InputRightElement>
                                 </InputGroup>
                             </FormControl>
                             <FormControl id="pic">
