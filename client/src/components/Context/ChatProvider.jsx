@@ -7,7 +7,7 @@ const ChatContext = createContext();
 
 const ChatProvider = ({ children }) => {
 
-    const socket = io("http://localhost:5000/");
+    const socket = io("/");
     const [user, setUser] = useState();
     const [selectedChat, setSelectedChat] = useState();
     const [chats, setChats] = useState([]);

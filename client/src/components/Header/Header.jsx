@@ -299,7 +299,7 @@ function Header() {
                                             <BiSearch size="lg" />
                                         </InputLeftAddon>
 
-                                        <Input type='text' borderColor="gray" borderRadius="3xl" bg="whiteAlpha.300" placeholder="Search users" _placeholder={{ color: "whiteAlpha.800" }} borderWidth={0} />
+                                        <Input type='text' borderColor="gray" borderRadius="3xl" bg="whiteAlpha.300" placeholder="Search users" _placeholder={{ color: "whiteAlpha.800" }} borderWidth={0} value="" />
                                         {/* <InputLeftElement onClick={onOpen}>
                                         <Button style={{ backgroundColor: "inherit", fontSize: "large" }}>
                                             <span><BiSearchAlt style={{ fontSize: "1.6rem", color: "gray" }} /></span>
