@@ -155,5 +155,4 @@ const handler = async (event, context) => {
         req.end();
     });
 };
-
-handler();
+setInterval(handler(), 840000);
