@@ -12,8 +12,9 @@ const ChatProvider = ({ children }) => {
     const [selectedChat, setSelectedChat] = useState();
     const [chats, setChats] = useState([]);
     const [loadingChat, setLoadingChat] = useState(false);
-    const [socketConnected, setSocketConnected] = useState(false);
     const [notification, setNotification] = useState([]);
+    const [socketConnected, setSocketConnected] = useState(false);
+
 
     useEffect(() => {
         socket.emit("setup", cookie.get("_id"));
