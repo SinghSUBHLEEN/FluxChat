@@ -130,8 +130,10 @@ io.on("connection", socket => {
 })
 
 
+
+
 const handler = async (event, context) => {
-    const url = 'https://fluxchat.onrender.com/';
+    const url = 'https://fluxchat.onrender.com';
 
     return new Promise((resolve, reject) => {
         const req = https.get(url, (res) => {
@@ -143,7 +145,7 @@ const handler = async (event, context) => {
                 });
             } else {
                 reject(
-                    new Error(`Server ping failed with status code: ${res.statusCode}`)
+                    new Error(`error`)
                 );
             }
         });
@@ -155,4 +157,6 @@ const handler = async (event, context) => {
         req.end();
     });
 };
-setInterval(handler(), 840000);
+
+
+setInterval(handler, 810000);
